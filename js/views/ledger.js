@@ -6,6 +6,8 @@ import { greeting, daysSinceLastWorkout } from "../eggs.js";
 import { liftChart, chartPoints, statusMark, STATUS_WORDS, fmtNum, figure } from "../charts.js";
 import { toDate, stampET, ago, dayKeyET, shortDayET, yearET, calendarDaysET } from "../time.js";
 import { fullReport, reportNullState, targetText } from "./report.js";
+import { accountsLine } from "./accounts.js";
+import { latestWritten, freshenAccounts } from "../accounts.js";
 
 const STATUSES = ["climbing", "stalled", "slipping"];
 const SHOW_FIRST = 8;          // of the "Earlier" group
@@ -56,6 +58,11 @@ export function renderLedger(ctx) {
   const covers = !!(report && data.last_workout && report.workout_id && report.workout_id === data.last_workout.id);
   if (report) page.append(fullReport(ctx, report, covers ? marginDays(daysSinceLastWorkout(data)) : reportMargin(report)));
   else page.append(reportNullState(ctx));
+
+  // The latest monthly accounts, in one line under the report.
+  freshenAccounts(ctx);
+  const accLine = accountsLine(ctx, latestWritten(ctx));
+  if (accLine) page.append(accLine);
 
   page.append(lastWorkout(ctx, data, title, model, covers));
 

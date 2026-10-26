@@ -3,7 +3,7 @@
 // ones are folded away by number. The sending and waiting live in ../ask.js.
 
 import { h, prefersReducedMotion } from "../dom.js";
-import { askState, loadConversation, sendQuestion, setFresh, MAX_QUESTION } from "../ask.js";
+import { askState, loadConversation, sendQuestion, setFresh, setCareful, MAX_QUESTION } from "../ask.js";
 import { waitingLine } from "../eggs.js";
 import { store } from "../store.js";
 import { toDate, dayKeyET, longDayET, clockET, shortDayET, yearET } from "../time.js";
@@ -107,7 +107,7 @@ export function renderAsk(ctx) {
   }
 
   page.append(h("p", { class: "fineprint ask-fine" },
-    "Answered by Claude Haiku 5.5, kept quick and thrifty. He reads your Hevy history, the ledger and the last few letters of this conversation. "
+    "Answered by Claude Haiku 5.5, kept quick and thrifty; with \u201cThink harder\u201d on, by Claude Opus 5.5 at length (marked \u201cthought over\u201d). He reads your Hevy history, the ledger and the last few letters of this conversation. "
     + (ctx.demo ? "In the sample household the answers are invented and nothing is sent." : "Each question runs on GitHub, like his rounds.")));
 
   keepWaitingLineTurning(ctx);
@@ -163,16 +163,23 @@ function exchange(ctx, m, { compact = false } = {}) {
   const failed = m.status === "failed";
   const answered = m.status === "answered" || (m.answer && !failed);
   const id = `ask-${String(m.ask_id || "").replace(/[^\w-]/g, "")}`;
+  const careful = isCareful(m) && !failed;
   const letter = answered || failed
-    ? h("article", { class: ["ask-letter", failed ? "is-failed" : ""], "aria-label": failed ? "The butler could not answer" : "The butler's reply", id: `${id}-letter`, tabindex: "-1" },
+    ? h("article", { class: ["ask-letter", failed ? "is-failed" : "", careful ? "is-careful" : ""], "aria-label": failed ? "The butler could not answer" : careful ? "The butler's considered reply" : "The butler's reply", id: `${id}-letter`, tabindex: "-1" },
       h("p", { class: "ask-letter-head" },
-        h("span", null, failed ? "The butler regrets" : "The butler replies"),
+        h("span", null, failed ? "The butler regrets" : "The butler replies",
+          careful ? h("span", { class: "ask-careful-mark", title: "Answered by Claude Opus, thinking harder" }, "thought over") : null),
         answeredLater(m) ? h("span", { class: "ask-letter-when num" }, answeredLater(m)) : null),
       h("div", { class: "ask-letter-body" }, paragraphs(m.answer)))
     : h("p", { class: "meta ask-noanswer" }, "No answer was recorded for this one.");
   return h("li", { class: ["entry", "ask-exchange", compact ? "is-compact" : ""], id },
     h("div", { class: "margin" }, marginClock(d)),
     h("div", { class: "body" }, note(m.question), letter));
+}
+
+/** A careful answer: "Think harder" was on (or Opus wrote it). */
+function isCareful(m) {
+  return m.careful === true || /opus/i.test(String(m.model || ""));
 }
 
 function pendingExchange(ctx, p) {
@@ -184,14 +191,15 @@ function pendingExchange(ctx, p) {
     h("div", { class: "body" },
       note(p.question),
       h("div", { class: "ask-letter is-pending" },
-        h("p", { class: "ask-letter-head" }, h("span", null, sending ? "Ringing for him" : "The butler is writing")),
+        h("p", { class: "ask-letter-head" }, h("span", null, sending ? "Ringing for him" : "The butler is writing",
+          p.careful ? h("span", { class: "ask-careful-mark" }, "thinking harder") : null)),
         h("p", { class: "ask-wait", id: "ask-wait", role: "status", "aria-live": "polite" },
           sending ? `Ringing for him, ${ctx.title}…` : line.text),
         p.phase === "slow"
           ? h("p", { class: "ask-wait-meta ask-slow", role: "status" },
             `Rung at ${clockET(new Date(p.at))} ET. He's taking his time over this one, ${ctx.title}. I shall keep watching.`)
           : h("p", { class: "ask-wait-meta" },
-            `Rung at ${clockET(new Date(p.at))} ET · usually a minute or so`))));
+            `Rung at ${clockET(new Date(p.at))} ET · ${p.careful ? "thinking harder takes a little longer" : "usually a minute or so"}`))));
 }
 
 /** While waiting, a fresh line every few seconds, so the page plainly isn't stuck. */
@@ -251,7 +259,7 @@ function composer(ctx, { canAfresh, empty }) {
   area.value = askState.draft || "";
   const count = h("p", { class: "ask-count num", id: "ask-count", "aria-live": "off" });
   const send = h("button", { type: "submit", class: "btn btn-primary", id: "ask-send" },
-    p ? "Awaiting his answer…" : "Ring for an answer");
+    p ? "Awaiting his answer…" : askState.careful ? "Ring for a considered answer" : "Ring for an answer");
 
   const update = () => {
     if (area.value.length > MAX_QUESTION) area.value = area.value.slice(0, MAX_QUESTION);
@@ -264,10 +272,26 @@ function composer(ctx, { canAfresh, empty }) {
   area.addEventListener("input", update);
   update();
 
+  const careful = askState.careful;
+  const think = h("div", { class: ["ask-think", careful ? "is-on" : ""] },
+    h("button", {
+      id: "ask-careful", type: "button", role: "switch", class: ["switch", careful ? "is-on" : ""],
+      "aria-checked": careful ? "true" : "false", "aria-labelledby": "ask-careful-label", "aria-describedby": "ask-careful-help",
+      disabled: !!p, onclick: () => setCareful(ctx, !careful),
+    },
+    h("span", { class: "switch-box", "aria-hidden": "true" }, h("span", { class: "switch-knob" }))),
+    h("span", { class: "ask-think-text" },
+      h("span", { class: "ask-think-label", id: "ask-careful-label" }, "Think harder"),
+      h("span", { class: "ask-think-help", id: "ask-careful-help" },
+        careful
+          ? "On, for this question only: Claude Opus answers. About 15¢, and a little slower."
+          : "Claude Opus answers this one question: about 15¢ rather than a third of a cent, and a little slower.")));
+
   const form = h("form", { class: "ask-form", novalidate: true },
     h("label", { for: "ask-q", class: "field-label" }, "Your question"),
     area,
     count,
+    think,
     h("div", { class: "actions" },
       send,
       canAfresh && !askState.fresh

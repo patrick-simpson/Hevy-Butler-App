@@ -29,7 +29,16 @@ const CANNED = [
 ];
 const FALLBACK = "Your Grace, an excellent question. Over the past eight weeks you have trained 24 times, and five of your eight lifts are climbing.\n\nKeep to two or three workouts a week as you have been, add a little weight only once every set reaches its reps, and mind the shoulder on the lateral raises.";
 
-function cannedAnswer(question) {
+// "Think harder": a longer, more considered invented answer.
+const CAREFUL = "Your Grace, I have gone through all twenty-four workouts before answering, rather than the last few.\n\n"
+  + "Three things stand out. Your legs and back are doing the heavy lifting of this household: the leg press has climbed 50 lb since September. "
+  + "Your shoulders have had less of the work, and the lateral raises have slipped from 20 lb in late September to 15 lb, which, with the grumbling you noted, "
+  + "says the shoulder wants care rather than more weight. And the seated row has sat at 130 lb for six sessions.\n\n"
+  + "So: keep the leg press as it is. Take the row back to 120 lb for two weeks of 3 sets of 10, then return to 130 lb. "
+  + "Hold the lateral raises at 15 lb, slowly, until all three sets reach 12 without complaint.";
+
+function cannedAnswer(question, careful = false) {
+  if (careful) return `${CAREFUL}\n\n${SAMPLE_NOTE}`;
   const hit = CANNED.find(([re]) => re.test(question));
   return `${hit ? hit[1] : FALLBACK}\n\n${SAMPLE_NOTE}`;
 }
@@ -47,6 +56,8 @@ export function demoClient() {
   let lastRun = { id: 100, at: Date.now() - 23 * 60000, status: "completed", conclusion: "success", event: "schedule" };
   let convo = null;                // the sample letters, plus any asked here
   const askRuns = [];              // pretend question runs, newest first
+  let accounts = null;             // the sample statements, plus any requested here
+  const accRuns = [];              // pretend accounts runs, newest first
 
   async function load() {
     if (!cache) {
@@ -145,7 +156,7 @@ export function demoClient() {
     },
 
     /** A pretend run: it "thinks" for a few seconds, then writes an invented answer. */
-    async askDispatch(question, askId, fresh) {
+    async askDispatch(question, askId, fresh, careful = false) {
       await wait(400);
       if (!convo) convo = structuredClone((await load()).conversation || { version: 1, messages: [] });
       const id = 500 + askRuns.length;
@@ -163,12 +174,13 @@ export function demoClient() {
         convo.messages.push({
           ask_id: askId, conversation: fresh || !top ? top + 1 : top,
           asked: now.toISOString(), asked_et: etStamp(now), question,
-          answer: cannedAnswer(question), answered_et: etStamp(done),
-          model: "claude-haiku-5-5", status: "answered",
+          answer: cannedAnswer(question, careful), answered_et: etStamp(done),
+          model: careful ? "claude-opus-5-5" : "claude-haiku-5-5", status: "answered",
+          ...(careful ? { careful: true } : {}),
         });
         run.status = "completed";
         run.conclusion = "success";
-      }, 6500);
+      }, careful ? 9500 : 6500);
       return null;
     },
 
@@ -183,5 +195,52 @@ export function demoClient() {
     },
 
     askRunsPage() { return "#/ask"; },
+
+    // --- The monthly accounts (pretend) -----------------------------------
+
+    async accounts() {
+      await wait(350);
+      if (!accounts) accounts = structuredClone((await load()).accounts || { version: 1, accounts: [] });
+      return structuredClone(accounts);
+    },
+
+    /** A pretend run: Opus "thinks hard" for a few seconds, then files an invented statement. */
+    async accountsDispatch(requestId) {
+      await wait(450);
+      if (!accounts) accounts = structuredClone((await load()).accounts || { version: 1, accounts: [] });
+      const template = (await load()).accounts_on_request;
+      const id = 900 + accRuns.length;
+      const now = new Date();
+      const run = {
+        id, event: "workflow_dispatch", status: "queued", conclusion: null, html_url: "#/accounts",
+        display_title: `Accounts: ${requestId}`, created_at: now.toISOString(),
+      };
+      accRuns.unshift(run);
+      setTimeout(() => { run.status = "in_progress"; }, 1500);
+      setTimeout(() => {
+        const done = new Date();
+        if (template) {
+          accounts.accounts.push({
+            ...structuredClone(template), id: `acc-${requestId}`, request_id: requestId,
+            written: done.toISOString(), written_et: etStamp(done),
+          });
+        }
+        run.status = "completed";
+        run.conclusion = "success";
+      }, 11000);
+      return null;
+    },
+
+    async accountsRuns() {
+      await wait(150);
+      return structuredClone(accRuns.slice(0, 10));
+    },
+
+    async accountsRun(id) {
+      await wait(120);
+      return structuredClone(accRuns.find((r) => r.id === id) || null);
+    },
+
+    accountsRunsPage() { return "#/accounts"; },
   };
 }

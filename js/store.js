@@ -15,6 +15,8 @@ const KEYS = {
   askFresh: "ledger.askFresh",    // "Start afresh" pressed: the next question begins a new conversation
   convo: "ledger.conversation",   // last good conversation.json
   waitLine: "ledger.lastWaitLine",
+  accounts: "ledger.accounts",    // last good accounts.json ({missing: true} when there is none yet)
+  accountsReq: "ledger.accountsRequest",   // the request for the big picture that awaits its statement
 };
 
 export const DEFAULT_REPO = "patrick-simpson/Hevy-Butler";
@@ -53,7 +55,7 @@ export const store = {
   /** "Forget my key": wipes the key and everything cached from the private repo. */
   forget() {
     for (const k of [KEYS.token, KEYS.repo, KEYS.mode, KEYS.data, KEYS.dataAt, KEYS.branch, KEYS.pending, KEYS.saved,
-      KEYS.ask, KEYS.askFresh, KEYS.convo]) set(k, null);
+      KEYS.ask, KEYS.askFresh, KEYS.convo, KEYS.accounts, KEYS.accountsReq]) set(k, null);
   },
 
   cachedData() {
@@ -88,6 +90,14 @@ export const store = {
 
   cachedConversation() { return getJSON(KEYS.convo, null); },
   saveConversation(c) { set(KEYS.convo, c ? JSON.stringify(c) : null); },
+
+  /** {file, missing, at}: the accounts as last read, or null. */
+  cachedAccounts() { return getJSON(KEYS.accounts, null); },
+  saveAccounts(a) { set(KEYS.accounts, a ? JSON.stringify(a) : null); },
+
+  /** The request for the big picture awaiting its statement: {request_id, at, runId, runUrl} or null. */
+  pendingAccounts() { return getJSON(KEYS.accountsReq, null); },
+  setPendingAccounts(p) { set(KEYS.accountsReq, p ? JSON.stringify(p) : null); },
 
   get lastWaitLine() { return Number(get(KEYS.waitLine)); },
   set lastWaitLine(i) { set(KEYS.waitLine, String(i)); },

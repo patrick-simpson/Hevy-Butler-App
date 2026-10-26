@@ -12,6 +12,8 @@ const AREA_PERMISSION = {
   actions: "Actions",
   ask: "Actions",
   conversation: "Contents",
+  accounts: "Actions",
+  accountsfile: "Contents",
   repo: "Metadata",
 };
 
@@ -31,6 +33,9 @@ export function explain(err, repo) {
   }
   const perm = AREA_PERMISSION[err.area] || "Contents";
   const msg = err.githubMessage.toLowerCase();
+  if (err.status === -1 && err.area === "accountsfile") {
+    return "The butler's accounts book (state/accounts.json) is there but I can't read it (it isn't valid JSON). His next statement should tidy it up.";
+  }
   if (err.status === -1 && err.area === "conversation") {
     return "The butler's letter book (state/conversation.json) is there but I can't read it (it isn't valid JSON). His next answer should tidy it up.";
   }
@@ -64,6 +69,11 @@ export function explain(err, repo) {
   }
   if (err.status >= 500) return "GitHub is having a moment of its own. Try again shortly.";
   return `GitHub said no (error ${err.status}). Try again in a minute.`;
+}
+
+/** GitHub's 422 "Unexpected inputs provided": the workflow on GitHub is older than this app. */
+function isInputsError(err) {
+  return err instanceof GitHubError && err.status === 422 && err.githubMessage.toLowerCase().includes("unexpected input");
 }
 
 /** GitHub's 422 "No ref found for: ..." - the branch named doesn't exist (renamed, say). */
@@ -112,9 +122,38 @@ export function explainAsk(err, repo) {
         "(Settings → Developer settings → Fine-grained tokens) and set \"Actions\" to \"Read and write\".";
     }
     if (isRefError(err)) return NO_REF;
+    if (isInputsError(err)) {
+      return "The butler's ask workflow on GitHub is an older copy that doesn't know \"Think harder\" yet. " +
+        "Switch \"Think harder\" off to ask him the ordinary way, or try again once his repository is up to date.";
+    }
     if (err.status === 422) {
       return "GitHub wouldn't pass the question on. The workflow may be switched off: on GitHub, open the Actions tab, " +
         "choose \"A word with the butler\" and press \"Enable workflow\" if it offers one.";
+    }
+  }
+  return explain(err, repo);
+}
+
+/**
+ * Why the request for the monthly accounts (the accounts.yml workflow)
+ * couldn't be sent, in plain English.
+ */
+export function explainAccounts(err, repo) {
+  if (err instanceof GitHubError && err.area === "accounts") {
+    const msg = err.githubMessage.toLowerCase();
+    const rate = msg.includes("rate limit");
+    if (err.status === 404) {
+      return "The butler's accounts workflow isn't on GitHub yet (.github/workflows/accounts.yml in the butler's repository). " +
+        "Once it is there, ask again. If it is there already, the key may be missing the \"Actions\" permission.";
+    }
+    if (err.status === 403 && !rate) {
+      return "Your GitHub key needs one more permission to request the accounts. On GitHub, edit the key " +
+        "(Settings → Developer settings → Fine-grained tokens) and set \"Actions\" to \"Read and write\".";
+    }
+    if (isRefError(err)) return NO_REF;
+    if (err.status === 422) {
+      return "GitHub wouldn't start the accounts. The workflow may be switched off: on GitHub, open the Actions tab, " +
+        "choose \"The monthly accounts\" and press \"Enable workflow\" if it offers one.";
     }
   }
   return explain(err, repo);
@@ -310,11 +349,22 @@ export function liveClient(token, repo) {
 
     /**
      * Sends one question: GitHub starts ask.yml with the question, the app's
-     * own id for it (so the run can be found again) and whether it starts a
-     * fresh conversation. Every input is a string, as GitHub requires.
+     * own id for it (so the run can be found again), whether it starts a
+     * fresh conversation, and whether he should think harder (Claude Opus
+     * rather than Haiku). Every input is a string, as GitHub requires.
+     * Should the workflow on GitHub be an older copy that doesn't know
+     * "careful" yet, an ordinary question is sent again without it (a careful
+     * one is refused, so it is never quietly answered the cheap way).
      */
-    askDispatch(question, askId, fresh) {
-      return this.startWorkflow("ask.yml", "ask", { question, ask_id: askId, fresh: fresh ? "true" : "false" });
+    async askDispatch(question, askId, fresh, careful = false) {
+      const inputs = { question, ask_id: askId, fresh: fresh ? "true" : "false", careful: careful ? "true" : "false" };
+      try {
+        return await this.startWorkflow("ask.yml", "ask", inputs);
+      } catch (err) {
+        if (careful || !isInputsError(err)) throw err;
+        delete inputs.careful;
+        return this.startWorkflow("ask.yml", "ask", inputs);
+      }
     },
 
     /** The ten most recent question runs, newest first. */
@@ -350,6 +400,47 @@ export function liveClient(token, repo) {
         throw new GitHubError(-1, "conversation", "unreadable");
       }
     },
+
+    // --- The monthly accounts (the accounts.yml workflow) -----------------
+
+    /**
+     * state/accounts.json: the butler's monthly statements, oldest first.
+     * Returns {version, accounts: []}, or null when there are none yet (no file).
+     */
+    async accounts() {
+      let raw;
+      try {
+        raw = await call("GET", `${R}/contents/state/accounts.json`, {
+          area: "accountsfile", accept: "application/vnd.github.raw+json",
+        });
+      } catch (err) {
+        if (err instanceof GitHubError && err.status === 404) return null;
+        throw err;
+      }
+      try {
+        const json = JSON.parse(raw);
+        return { version: 1, ...json, accounts: Array.isArray(json && json.accounts) ? json.accounts : [] };
+      } catch (_) {
+        throw new GitHubError(-1, "accountsfile", "unreadable");
+      }
+    },
+
+    /** Asks for the big picture now: GitHub starts accounts.yml with the app's own id for the request. */
+    accountsDispatch(requestId) {
+      return this.startWorkflow("accounts.yml", "accounts", { request_id: requestId });
+    },
+
+    /** The ten most recent accounts runs, newest first. */
+    async accountsRuns() {
+      const res = await call("GET", `${R}/actions/workflows/accounts.yml/runs?per_page=10`, { area: "accounts" });
+      return (res && Array.isArray(res.workflow_runs)) ? res.workflow_runs : [];
+    },
+
+    /** One accounts run, by its id. */
+    accountsRun(id) { return call("GET", `${R}/actions/runs/${id}`, { area: "accounts" }); },
+
+    /** Where to watch the accounts runs on GitHub. */
+    accountsRunsPage() { return `https://github.com/${repo}/actions/workflows/accounts.yml`; },
 
     /** Where to watch the butler's rounds on GitHub. */
     runsPage() { return `https://github.com/${repo}/actions/workflows/butler.yml`; },

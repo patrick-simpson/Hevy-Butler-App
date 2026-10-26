@@ -20,6 +20,7 @@ import { explain, explainAsk } from "./github.js";
 export const MAX_QUESTION = 1000;
 const LIMIT = 4 * 60 * 1000;          // no run found by four minutes: stop waiting (it may never have started)
 const HARD_LIMIT = 11 * 60 * 1000;    // a run found but still going: keep watching up to its 10-minute limit, plus a little
+const CAREFUL_LIMIT = 16 * 60 * 1000; // a careful (Opus) question: its workflow allows 15 minutes
 const SLOW_EVERY = 15 * 1000;         // after four minutes, look every 15 seconds rather than every 4
 const FORGET_AFTER = 60 * 60 * 1000;  // a question pending for over an hour is let go on opening
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -33,8 +34,10 @@ export const askState = {
   triedAt: 0,           // when the letters were last asked for (worked or not)
   pending: null,        // {ask_id, question, fresh, at, phase, runId, runUrl}
   fresh: false,         // "Start afresh" pressed: the next question begins a new conversation
+  careful: false,       // "Think harder" on: the next question goes to Claude Opus (switches itself off once sent)
   note: null,           // how the last question went, when it didn't simply arrive: {tone, text, link}
   draft: "",            // the question being written (kept while you look at other pages)
+  lostAsk: null,        // ask_id of a question the app stopped watching while it might still be answered
   justAnswered: null,   // ask_id of an answer that has just arrived (the page scrolls to it)
 };
 
@@ -52,7 +55,7 @@ function persistPending() {
   if (askState.client && askState.client.demo) return;   // the sample household remembers nothing
   store.setPendingAsk(askState.pending
     ? { ask_id: askState.pending.ask_id, question: askState.pending.question, fresh: !!askState.pending.fresh,
-      at: askState.pending.at, runId: askState.pending.runId || null, runUrl: askState.pending.runUrl || null }
+      careful: !!askState.pending.careful, at: askState.pending.at, runId: askState.pending.runId || null, runUrl: askState.pending.runUrl || null }
     : null);
 }
 
@@ -80,7 +83,7 @@ export function bindAsk(ctx) {
   const demo = !!(client && client.demo);
   Object.assign(askState, {
     client, convo: null, convoAt: 0, convoError: null, loading: false, triedAt: 0, pending: null,
-    fresh: false, note: null, draft: "", justAnswered: null,
+    fresh: false, careful: false, note: null, draft: "", justAnswered: null, lostAsk: null,
   });
   if (!client) return;
   if (!demo) {
@@ -138,15 +141,33 @@ export function findMessage(askId) {
   return msgs.find((m) => m && m.ask_id === askId) || null;
 }
 
-/** If the letters now hold the answer we were waiting for, stop waiting. */
+/**
+ * If the letters now hold the answer we were waiting for, stop waiting. Also
+ * notices the answer to a question the app had stopped watching, so the note
+ * saying "pull down in a few minutes" doesn't outstay the answer itself.
+ */
 function reconcile(ctx) {
   const p = askState.pending;
-  if (!p) return false;
+  if (!p) {
+    const lost = askState.lostAsk;
+    const msg = lost ? findMessage(lost.ask_id) : null;
+    if (!msg) return false;
+    askState.lostAsk = null;
+    return settle(ctx, lost, msg);
+  }
   const msg = findMessage(p.ask_id);
   if (!msg) return false;
-  // He regrets he couldn't answer: give the question back, as the other failures do.
-  if (msg.status === "failed" && !askState.draft) askState.draft = p.question;
   askState.pending = null;
+  return settle(ctx, p, msg);
+}
+
+function settle(ctx, p, msg) {
+  // He regrets he couldn't answer: give the question back, as the other
+  // failures do, and "Think harder" with it when that is how it was asked.
+  if (msg.status === "failed" && !askState.draft) {
+    askState.draft = p.question;
+    if (p.careful) askState.careful = true;
+  }
   askState.note = null;
   askState.justAnswered = p.ask_id;
   persistPending();
@@ -169,14 +190,27 @@ export function setFresh(ctx, on) {
   ctx.render();
 }
 
+/**
+ * "Think harder": the next question goes to Claude Opus (about 15 cents
+ * rather than a third of a cent, and a little slower). It is never
+ * remembered across visits and switches itself off once a question is sent,
+ * so the dearer answer is always a deliberate choice.
+ */
+export function setCareful(ctx, on) {
+  if (askState.pending) return;
+  askState.careful = !!on;
+  ctx.render();
+}
+
 /** Sends one question to the butler. */
 export async function sendQuestion(ctx, raw) {
   const client = askState.client;
   const question = String(raw || "").trim().slice(0, MAX_QUESTION);
   if (!client || !question || askState.pending) return;
-  const p = { ask_id: makeAskId(), question, fresh: askState.fresh, at: Date.now(), phase: "sending" };
+  const p = { ask_id: makeAskId(), question, fresh: askState.fresh, careful: askState.careful, at: Date.now(), phase: "sending" };
   askState.pending = p;
   askState.note = null;
+  askState.lostAsk = null;
   askState.draft = "";
   askState.justAnswered = null;
   persistPending();
@@ -185,7 +219,7 @@ export async function sendQuestion(ctx, raw) {
 
   try {
     // GitHub looks up the butler's branch fresh each time (it may have been renamed).
-    const ref = await client.askDispatch(question, p.ask_id, p.fresh);
+    const ref = await client.askDispatch(question, p.ask_id, p.fresh, p.careful);
     if (!client.demo && typeof ref === "string" && ref) store.branch = ref;
   } catch (err) {
     if (askState.client !== client || askState.pending !== p) return;
@@ -199,6 +233,7 @@ export async function sendQuestion(ctx, raw) {
   if (askState.client !== client || askState.pending !== p) return;
   p.phase = "waiting";
   if (p.fresh) { askState.fresh = false; persistFresh(); }
+  if (p.careful) askState.careful = false;   // for this one question only
   persistPending();
   ctx.render();
   follow(ctx, client, p);
@@ -253,7 +288,7 @@ async function followInner(ctx, client, p) {
     if (!p.runId && waited > LIMIT) break;
     // A run found but still queued or going: keep the question waiting (so a
     // second one can't be sent and jostle it) until the workflow's own limit.
-    if (waited > HARD_LIMIT) break;
+    if (waited > (p.careful ? CAREFUL_LIMIT : HARD_LIMIT)) break;
     const phase = run ? (waited > LIMIT ? "slow" : "running") : p.phase;
     if (phase !== p.phase) { p.phase = phase; rerender(ctx); }
   }
@@ -264,21 +299,23 @@ async function followInner(ctx, client, p) {
     href: (run && run.html_url) || p.runUrl || (typeof client.askRunsPage === "function" ? client.askRunsPage() : ""),
     label: "See it on GitHub",
   };
-  const letGo = (note) => {
+  const letGo = (note, { lost = false } = {}) => {
     askState.pending = null;
     persistPending();
     askState.note = note;
+    // Still being answered, perhaps: remember it, so the answer clears this note when it comes.
+    askState.lostAsk = lost ? { ask_id: p.ask_id, question: p.question, careful: !!p.careful } : null;
     ctx.render();
   };
 
   if (errors >= 5) {
     letGo({ tone: "warn", link,
-      text: `I lost touch with GitHub while waiting, ${t}. ${explain(lastError, client.repo)} Your question went through all the same; his reply will appear here once I can reach GitHub again. Pull down to look.` });
+      text: `I lost touch with GitHub while waiting, ${t}. ${explain(lastError, client.repo)} Your question went through all the same; his reply will appear here once I can reach GitHub again. Pull down to look.` }, { lost: true });
     return;
   }
   if (!run || run.status !== "completed") {
     letGo({ tone: "warn", link,
-      text: `He's taking his time over this one, ${t}. The answer will appear here when he's done; pull down on this page in a few minutes to look.` });
+      text: `He's taking his time over this one, ${t}. The answer will appear here when he's done; pull down on this page in a few minutes to look.` }, { lost: true });
     return;
   }
 
@@ -293,7 +330,11 @@ async function followInner(ctx, client, p) {
   }
   if (!mine()) return;
   if (run.conclusion && run.conclusion !== "success") {
-    if (!askState.draft) askState.draft = p.question;
+    // Give the question back for re-sending, with "Think harder" if it was asked that way.
+    if (!askState.draft) {
+      askState.draft = p.question;
+      if (p.careful) askState.careful = true;
+    }
     letGo({ tone: "bad", link,
       text: run.conclusion === "cancelled"
         ? `The question was called off before he could answer, ${t}. Your words are back in the box below; do ring again.`
@@ -301,5 +342,5 @@ async function followInner(ctx, client, p) {
     return;
   }
   letGo({ tone: "warn", link,
-    text: `He has answered, ${t}, but his letter hasn't reached the ledger yet. Pull down on this page in a minute to fetch it.` });
+    text: `He has answered, ${t}, but his letter hasn't reached the ledger yet. Pull down on this page in a minute to fetch it.` }, { lost: true });
 }

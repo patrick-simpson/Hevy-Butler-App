@@ -775,6 +775,285 @@ main { display: block; outline: none; }
 .ask-exchange.is-compact .ask-letter-body { font-size: 1rem; line-height: 1.5rem; }
 .ask .ask-fine { margin-left: calc(var(--margin) + var(--gap)); }
 
+/* "Think harder": one question to Claude Opus, then the switch turns itself off. */
+.ask-think {
+  display: flex; align-items: flex-start; gap: 0.75rem;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0 0.4rem;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+.ask-think .switch { margin-top: 0.05rem; }
+.ask-think .switch:disabled { opacity: 0.45; cursor: default; }
+.ask-think-text { display: flex; flex-direction: column; min-width: 0; padding-top: 0.2rem; }
+.ask-think-label { font-weight: 600; line-height: 1.4rem; }
+.ask-think-help { font-size: 0.9375rem; line-height: 1.35rem; color: var(--ink-3); font-style: italic; }
+.ask-think.is-on .ask-think-label { color: var(--red); }
+.ask-think.is-on .ask-think-help { color: var(--ink-2); }
+
+/* A careful answer: a double red rule over the letter, and a small mark in its head. */
+.ask-letter.is-careful { border-top: 3px double var(--red); }
+.ask-careful-mark::before { content: "· "; color: var(--ink-3); font-style: normal; }
+.ask-careful-mark {
+  margin-left: 0.4rem;
+  color: var(--red); font-style: italic; font-weight: 400;
+  font-variant-caps: normal; letter-spacing: 0;
+  white-space: nowrap; display: inline-block;
+  font-size: 0.9375rem;
+}
+
+/* ------------------------------------------------- the monthly accounts -- */
+
+/* On the Ledger, under the report: one ruled line that leads to the accounts. */
+.acc-line {
+  display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+  min-height: 3rem;
+  margin: calc(var(--lh) * 0.75) 0 0 calc(var(--margin) + var(--gap));
+  padding: 0.4rem 0 0.45rem;
+  border-top: 3px double var(--ink);
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink);
+  text-decoration: none;
+}
+.acc-line-text { display: flex; flex-direction: column; min-width: 0; }
+.acc-line-label {
+  font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; font-size: 1.0625rem; line-height: 1.35rem;
+  color: var(--red); font-variant-numeric: lining-nums;
+}
+.acc-line-headline { font-style: italic; color: var(--ink-2); font-size: 1rem; line-height: 1.45rem; overflow-wrap: anywhere; }
+.acc-line-arrow { color: var(--red); font-size: 1.25rem; flex: none; }
+.acc-line:active { transform: translateY(1px); }
+.acc-line.is-none .acc-line-label { color: var(--ink-2); }
+
+.acc-back { color: inherit; }
+.acc-notice { margin-left: calc(var(--margin) + var(--gap)); }
+.acc-empty .empty-head { margin-top: 0; }
+.acc-rules-link { margin-top: calc(var(--lh) * 0.35); font-weight: 600; }
+.accounts .acc-fine { margin-left: calc(var(--margin) + var(--gap)); }
+
+/* The statement: a ruled sheet, its head between double rules, its schedules
+   numbered in the margin like a formal statement of accounts. */
+.acc-latest-wrap { margin-top: calc(var(--lh) * 0.75); }
+.acc-statement { outline-offset: 4px; }
+.acc-head {
+  padding: 0.45rem 0 0.55rem;
+  border-top: 3px double var(--ink);
+  border-bottom: 1px solid var(--ink);
+  box-shadow: 0 3px 0 -2px var(--ink);
+  margin-bottom: calc(var(--lh) * 0.5);
+}
+.acc-head-top { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; }
+.acc-head-word {
+  font-variant-caps: all-small-caps; letter-spacing: 0.14em; font-weight: 600; font-size: 1rem; line-height: 1.3rem;
+  color: var(--ink-2);
+}
+.acc-no { font-style: italic; color: var(--ink-3); font-size: 0.9375rem; white-space: nowrap; }
+.acc-period {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.875rem; line-height: calc(var(--lh) * 1.3);
+  margin-top: 0.1rem;
+  text-wrap: balance;
+}
+.acc-head-meta { font-size: 0.9375rem; line-height: 1.35rem; color: var(--ink-3); font-style: italic; }
+.acc-headline {
+  font-family: var(--font-display);
+  font-size: 1.4375rem; line-height: 1.95rem;
+  color: var(--ink);
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+.acc-summary { margin-top: calc(var(--lh) * 0.4); }
+.acc-summary-p { white-space: pre-line; overflow-wrap: anywhere; }
+.acc-summary-p + .acc-summary-p { margin-top: calc(var(--lh) * 0.5); }
+
+.acc-stamp-line { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; margin-bottom: calc(var(--lh) * 0.4); }
+.acc-stamp, .acc-balance-row.is-neglected .acc-verdict {
+  display: inline-block;
+  border: 1.5px solid var(--red);
+  padding: 0 0.4rem;
+  color: var(--red);
+  font-variant-caps: all-small-caps; letter-spacing: 0.1em; font-weight: 600; font-style: normal;
+  line-height: 1.45rem;
+  transform: rotate(-2deg);
+}
+.acc-stamp-note { font-style: italic; color: var(--ink-2); font-size: 1rem; line-height: 1.4rem; }
+.acc-statement.is-failed .acc-summary-p { font-style: italic; color: var(--ink-2); }
+
+.acc-part { position: relative; margin-top: calc(var(--lh) * 0.9); }
+.acc-label {
+  display: block;
+  font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; font-size: 1.0625rem; line-height: 1.5rem;
+  color: var(--ink);
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid var(--ink);
+}
+.acc-roman {
+  position: absolute;
+  left: calc(-1 * (var(--margin) + var(--gap)));
+  width: var(--margin);
+  text-align: right;
+  font-family: var(--font-display); font-weight: 400;
+  font-variant-caps: normal; letter-spacing: 0;
+  font-size: 1.125rem; line-height: 1.5rem;
+  color: var(--red);
+}
+.acc-highlights { margin-top: 0.2rem; }
+
+/* Tables: ruled lines, column heads in small capitals, figures to the right. */
+.acc-table { width: 100%; border-collapse: collapse; font-size: 1rem; line-height: 1.4rem; }
+.acc-table th, .acc-table td { padding: 0.35rem 0; text-align: left; vertical-align: baseline; }
+.acc-table thead th {
+  font-weight: 600; font-variant-caps: all-small-caps; letter-spacing: 0.07em; font-size: 0.9375rem;
+  color: var(--ink-3);
+  padding-top: 0.25rem; padding-bottom: 0.2rem;
+  border-bottom: 1px solid var(--rule);
+}
+.acc-table tbody tr + tr { border-top: 1px solid var(--rule); }
+.acc-table tbody tr:last-child { border-bottom: 1px solid var(--ink); }
+.acc-table .num { text-align: right; padding-left: 0.75rem; white-space: nowrap; }
+.acc-table tbody th { font-weight: 400; }
+.acc-figures tbody th { font-variant-caps: all-small-caps; letter-spacing: 0.06em; color: var(--ink-2); font-size: 1.0625rem; white-space: nowrap; }
+.acc-figures .acc-now { font-weight: 600; font-size: 1.125rem; }
+.acc-before { color: var(--ink-3); }
+.acc-before.is-none { color: var(--rule); }
+.acc-figures tr.is-record .acc-now { color: var(--red); }
+.acc-figures tr.is-down .acc-now { color: var(--ochre); }
+.acc-sub {
+  margin-top: calc(var(--lh) * 0.5);
+  font-variant-caps: all-small-caps; letter-spacing: 0.07em; font-size: 0.9375rem; font-weight: 600; color: var(--ink-3);
+}
+.acc-tally { margin-top: 0.1rem; }
+.acc-tally .tally-item { cursor: default; min-height: 3.25rem; }
+.acc-tally dd { margin: 0; }
+
+.acc-groups tbody th { width: 100%; }
+.acc-group { display: block; line-height: 1.35rem; }
+.acc-groups .acc-now { font-weight: 600; }
+.acc-groups tr.is-down .acc-now { color: var(--ochre); }
+.acc-bar { display: block; width: 100%; max-width: 15rem; height: 0.6rem; margin-top: 0.2rem; overflow: visible; }
+.acc-bar-now { stroke: var(--ink); stroke-width: 3; vector-effect: non-scaling-stroke; }
+.acc-bar-before { stroke: var(--ink-3); stroke-width: 1.25; vector-effect: non-scaling-stroke; }
+.acc-legend { margin-top: 0.3rem; font-size: 0.875rem; line-height: 1.3rem; color: var(--ink-3); font-style: italic; }
+.acc-key { display: inline-block; width: 1.4rem; vertical-align: middle; margin-left: 0.2rem; }
+.acc-key-now { border-top: 3px solid var(--ink); }
+.acc-key-before { border-top: 1.25px solid var(--ink-3); margin-left: 0.6rem; }
+
+/* The balance: each area with its verdict, styled so the three can't be confused. */
+.acc-balance-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 0.75rem; align-items: baseline;
+  padding: 0.4rem 0 0.45rem;
+  border-bottom: 1px solid var(--rule);
+}
+.acc-area { font-weight: 600; font-size: 1.0625rem; overflow-wrap: anywhere; }
+.acc-verdict { font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; font-size: 1.0625rem; white-space: nowrap; }
+.acc-balance-row.is-well-fed .acc-verdict { color: var(--green); border-bottom: 3px double var(--green); line-height: 1.2rem; }
+.acc-balance-row.is-about-right .acc-verdict { color: var(--ink-2); font-weight: 400; font-style: italic; }
+.acc-balance-row.is-neglected .acc-verdict { margin-right: 0.15rem; }
+.acc-note { grid-column: 1 / -1; font-style: italic; color: var(--ink-2); font-size: 1rem; line-height: 1.4rem; margin-top: 0.1rem; overflow-wrap: anywhere; }
+
+/* Stalls: the lift, then cause and remedy as a pair of ruled entries. */
+.acc-stall { padding: 0.45rem 0 0.5rem; border-bottom: 1px solid var(--rule); }
+.acc-stall-lift { font-weight: 600; font-size: 1.0625rem; line-height: 1.45rem; font-variant-numeric: lining-nums; overflow-wrap: anywhere; }
+.acc-cr > div { display: grid; grid-template-columns: 4.6rem minmax(0, 1fr); column-gap: 0.5rem; margin-top: 0.25rem; }
+.acc-cr dt { font-variant-caps: all-small-caps; letter-spacing: 0.07em; font-weight: 600; font-size: 0.9375rem; line-height: 1.4rem; color: var(--ink-3); }
+.acc-cr dd { margin: 0; font-size: 1rem; line-height: 1.45rem; overflow-wrap: anywhere; }
+/* On a narrow phone the label goes above its text, so the text has the full width. */
+@media (max-width: 25rem) {
+  .acc-cr > div { grid-template-columns: 1fr; }
+  .acc-cr dd { margin-top: 0.05rem; }
+}
+.acc-cause dd { color: var(--ink-2); font-style: italic; }
+.acc-remedy dt { color: var(--red); }
+
+/* Hevy Trainer settings: the setting, the change in red, the reason beneath. */
+.acc-setting {
+  display: flex; flex-direction: column;
+  padding: 0.45rem 0 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.acc-setting-name {
+  font-variant-caps: all-small-caps; letter-spacing: 0.07em; font-weight: 600; font-size: 1.0625rem; line-height: 1.35rem;
+  color: var(--ink-2);
+}
+.acc-setting-to { color: var(--red); font-weight: 600; font-size: 1.1875rem; line-height: 1.55rem; overflow-wrap: anywhere; }
+.acc-arrow { font-weight: 400; }
+.acc-setting-why { font-style: italic; color: var(--ink-2); font-size: 1rem; line-height: 1.4rem; margin-top: 0.15rem; }
+
+/* For the month ahead: three points, numbered like the minutes of a meeting. */
+.acc-focus li {
+  display: grid; grid-template-columns: 1.75rem minmax(0, 1fr); column-gap: 0.4rem; align-items: baseline;
+  padding: 0.4rem 0 0.45rem;
+  border-bottom: 1px solid var(--rule);
+}
+.acc-focus-n { font-family: var(--font-display); font-size: 1.375rem; color: var(--red); font-variant-numeric: lining-nums; }
+.acc-focus-text { font-size: 1.0625rem; line-height: 1.5rem; overflow-wrap: anywhere; }
+
+.acc-ps { margin-top: calc(var(--lh) * 0.9); }
+.acc-part:last-of-type .acc-focus li:last-child, .acc-part:last-of-type .acc-settings li:last-child,
+.acc-part:last-of-type .acc-stall:last-child, .acc-part:last-of-type .acc-balance-row:last-child { border-bottom: 0; }
+
+/* Every lift, first to last: folded away. */
+.acc-lifts { margin-top: calc(var(--lh) * 0.75); border-top: 1px solid var(--rule); }
+.acc-lifts summary, .acc-fold summary {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 0.75rem;
+  min-height: 2.75rem; padding: 0.5rem 0;
+  cursor: pointer; list-style: none;
+}
+.acc-lifts summary::-webkit-details-marker, .acc-fold summary::-webkit-details-marker { display: none; }
+.acc-fold-name { font-weight: 600; color: var(--red); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; font-variant-numeric: lining-nums; }
+.acc-fold-name::before { content: "▸ "; display: inline-block; width: 1rem; text-decoration: none; }
+.acc-lifts[open] > summary .acc-fold-name::before, .acc-fold[open] > summary .acc-fold-name::before { content: "▾ "; }
+.acc-lift-list { border-bottom: 1px solid var(--ink); }
+.acc-lift { padding: 0.4rem 0 0.45rem; border-top: 1px solid var(--rule); }
+.acc-lift-head { display: flex; justify-content: space-between; align-items: baseline; gap: 0.75rem; }
+.acc-lift-name { font-weight: 600; font-size: 1.0625rem; line-height: 1.4rem; font-variant-numeric: lining-nums; min-width: 0; }
+.acc-lift-head .status { flex: none; font-size: 1rem; }
+.acc-lift-sets { font-size: 1rem; line-height: 1.45rem; color: var(--ink-2); }
+.acc-from, .acc-to { white-space: nowrap; }
+.acc-from { color: var(--ink-3); }
+.acc-to { font-weight: 600; color: var(--ink); }
+.acc-arrow-to { color: var(--red); }
+.acc-rpe { font-weight: 400; font-size: 0.875rem; color: var(--ink-3); }
+.acc-lift-n { color: var(--ink-3); font-style: italic; white-space: nowrap; }
+
+.acc-foot {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.15rem 1rem;
+  margin-top: calc(var(--lh) * 0.9);
+  padding-top: 0.4rem;
+  border-top: 3px double var(--ink);
+  font-size: 0.9375rem; line-height: 1.35rem; color: var(--ink-3); font-style: italic;
+}
+.acc-foot-sign { font-family: var(--font-display); font-size: 1.0625rem; color: var(--ink-2); }
+.acc-foot-sign:only-child { margin-left: auto; }
+
+/* Earlier statements, folded like papers in a drawer. */
+.acc-fold { border-top: 1px solid var(--rule); }
+.acc-fold:last-child { border-bottom: 1px solid var(--rule); }
+.acc-fold-meta { font-size: 0.9375rem; color: var(--ink-3); }
+.acc-fold-headline { flex-basis: 100%; font-style: italic; color: var(--ink-2); font-size: 0.9375rem; line-height: 1.35rem; padding-left: 1rem; }
+.acc-fold > .acc-statement { padding: 0.25rem 0 calc(var(--lh) * 0.75); }
+.acc-fold .acc-period { font-size: 1.5rem; }
+
+/* Request the big picture now. */
+.acc-request.is-top { margin-top: calc(var(--lh) * 0.75); }
+.acc-confirm {
+  margin-top: calc(var(--lh) * 0.25);
+  padding: 0.6rem 0.8rem 0.75rem;
+  background: var(--paper-light);
+  border: 1px solid var(--paper-edge);
+  border-top: 2px solid var(--red);
+}
+.acc-confirm-q { font-size: 1.0625rem; line-height: 1.55rem; }
+.acc-confirm .actions { margin-top: 0.5rem; }
+.acc-pending {
+  padding: 0.6rem 0.8rem 0.7rem;
+  border: 1px dashed var(--ink-3);
+  border-top: 2px solid var(--ink-3);
+}
+.acc-wait { font-style: italic; min-height: calc(var(--lh) * 2); }
+.acc-wait-meta { margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.35rem; color: var(--ink-3); }
+.acc-req-note { margin-top: calc(var(--lh) * 0.5); }
+
 /* ------------------------------------------------------------- buttons -- */
 
 .actions {

@@ -138,6 +138,9 @@ export function renderRules(ctx) {
   // ---- the rounds
   page.append(roundsBlock(ctx));
 
+  // ---- the monthly accounts
+  page.append(accountsBlock(ctx));
+
   // ---- health
   page.append(healthBlock(ctx));
 
@@ -504,6 +507,17 @@ function roundsBlock(ctx) {
       h("button", { type: "button", class: "btn", id: "rounds-rehearse", disabled: busy, onclick: () => ctx.rehearse() }, "Rehearse on my latest workout")),
     h("p", { class: "field-help" }, "A rehearsal goes through your latest workout as if for real, changes nothing in Hevy, and files its notes below, marked as a rehearsal."),
     roundNote(ctx));
+}
+
+// ------------------------------------------------------- the accounts --
+
+function accountsBlock(ctx) {
+  return h("section", { class: "section", "aria-labelledby": "accounts-h" },
+    h("h2", { id: "accounts-h", class: "section-label" }, "The monthly accounts"),
+    h("p", { class: "field-help" },
+      "On the 1st of each month, in the morning Eastern (about 9:30 in winter, 10:30 in summer), the butler draws up the month's accounts with Claude Opus: "
+      + "the big picture, what stalled and why, and which Hevy Trainer settings to change. About 15 to 25¢ a statement. You may also ask for one at any time."),
+    h("p", { class: "acc-rules-link" }, h("a", { href: "#/accounts", id: "rules-accounts" }, "Read the accounts →")));
 }
 
 // --------------------------------------------------------------- health --

@@ -8,7 +8,7 @@
 // BUMP VERSION WITH EVERY RELEASE. A changed sw.js is what makes installed
 // phones fetch every file of the new release together (no mixed versions).
 
-const VERSION = "ledger-v4";
+const VERSION = "ledger-v5";
 const SHELL = [
   "./",
   "./index.html",
@@ -26,11 +26,13 @@ const SHELL = [
   "./js/charts.js",
   "./js/eggs.js",
   "./js/ask.js",
+  "./js/accounts.js",
   "./js/views/welcome.js",
   "./js/views/ledger.js",
   "./js/views/awaiting.js",
   "./js/views/ask.js",
   "./js/views/report.js",
+  "./js/views/accounts.js",
   "./js/views/book.js",
   "./js/views/rules.js",
   "./js/views/diary.js",

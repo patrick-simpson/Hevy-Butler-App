@@ -1495,7 +1495,374 @@
     "answered_et": "Sat Oct 24, 6:46 PM ET",
     "model": "claude-haiku-5-5",
     "status": "answered"
+   },
+   {
+    "ask_id": "q-sample-05",
+    "conversation": 2,
+    "asked": "2026-10-26T01:10:00+00:00",
+    "asked_et": "Sun Oct 25, 9:10 PM ET",
+    "question": "Why has my seated row stalled, and what would you change?",
+    "answer": "Your Grace, I went back through every row you have logged before answering.\n\nYou reached 130 lb on Sep 12 and have done it seven times since, always for 8 or 9, never 10. The weight is not the trouble; the order and the rest are. The row comes straight after the pull-ups, when your back is already tired, and the timer says about a minute between sets.\n\nI would change three things, in this order. Rest two full minutes between sets. Do the row first on the days it appears, before the pull-ups. And if all three sets still won't reach 10 in a fortnight, step back to 120 lb for 3 × 10 for two weeks, then return to 130 lb. I have written the last of these up for your approval under Awaiting.",
+    "answered_et": "Sun Oct 25, 9:13 PM ET",
+    "model": "claude-opus-5-5",
+    "careful": true,
+    "status": "answered"
    }
   ]
+ },
+ "accounts": {
+  "version": 1,
+  "accounts": [
+   {
+    "id": "acc-2026-10-01",
+    "request_id": "monthly",
+    "period": "September 2026",
+    "period_start": "2026-09-01",
+    "period_end": "2026-09-30",
+    "written": "2026-10-01T14:41:00+00:00",
+    "written_et": "Thu Oct 1, 10:41 AM ET",
+    "model": "claude-opus-5-5",
+    "status": "written",
+    "title": "Your Grace",
+    "numbers": {
+     "workouts": 11,
+     "workouts_before": 8,
+     "working_sets": 152,
+     "volume_lb": 61840,
+     "records": 3,
+     "climbing": 5,
+     "stalled": 2,
+     "slipping": 0,
+     "sets_by_group": [
+      {
+       "group": "quadriceps",
+       "sets": 30,
+       "sets_before": 24
+      },
+      {
+       "group": "chest",
+       "sets": 28,
+       "sets_before": 22
+      },
+      {
+       "group": "lats",
+       "sets": 26,
+       "sets_before": 20
+      },
+      {
+       "group": "upper_back",
+       "sets": 22,
+       "sets_before": 20
+      },
+      {
+       "group": "shoulders",
+       "sets": 18,
+       "sets_before": 10
+      },
+      {
+       "group": "triceps",
+       "sets": 14,
+       "sets_before": 12
+      },
+      {
+       "group": "abdominals",
+       "sets": 8,
+       "sets_before": 6
+      },
+      {
+       "group": "hamstrings",
+       "sets": 6,
+       "sets_before": 8
+      },
+      {
+       "group": "biceps",
+       "sets": 0,
+       "sets_before": 4
+      }
+     ],
+     "lifts": [
+      {
+       "lift": "Leg Press (Machine)",
+       "status": "climbing",
+       "start": "270 lb x 10",
+       "end": "290 lb x 10"
+      },
+      {
+       "lift": "Chest Press (Machine)",
+       "status": "climbing",
+       "start": "100 lb x 10",
+       "end": "120 lb x 9"
+      },
+      {
+       "lift": "Pull Up (Assisted)",
+       "status": "climbing",
+       "start": "100 lb x 6",
+       "end": "90 lb x 8"
+      },
+      {
+       "lift": "Lateral Raise (Dumbbell)",
+       "status": "climbing",
+       "start": "15 lb x 12",
+       "end": "20 lb x 11"
+      },
+      {
+       "lift": "Push Up",
+       "status": "climbing",
+       "start": "14 reps",
+       "end": "15 reps"
+      },
+      {
+       "lift": "Seated Row (Machine)",
+       "status": "stalled",
+       "start": "120 lb x 10",
+       "end": "130 lb x 8"
+      },
+      {
+       "lift": "Triceps Dip (Assisted)",
+       "status": "stalled",
+       "start": "60 lb x 8",
+       "end": "60 lb x 8"
+      }
+     ]
+    },
+    "headline": "A sound month on the books, Your Grace: the legs are strong, and the arms are owed a visit.",
+    "summary": "Eleven workouts in September against eight in August, and not one week missed. That alone is the making of a month. The leg press rose from 270 lb to 290 lb for ten, the chest press from 100 lb to 120 lb, and the pull-up now asks for 10 lb less help than it did on the 4th.\n\nThe ledger is not all credit. The seated row reached 130 lb in the second week and has stayed there, and the assisted dips have not moved since the first. Biceps had no direct work at all: Hevy Trainer has been cutting the last exercise of the long days, and the last exercise is usually the arms.",
+    "highlights": [
+     "Eleven workouts, the most in any month so far.",
+     "Leg press: 290 lb for 10, up from 270 lb.",
+     "Pull-up: down to 90 lb of help, from 100 lb."
+    ],
+    "balance": [
+     {
+      "area": "Legs",
+      "verdict": "well fed",
+      "note": "30 sets of quadriceps, and every one of them earned."
+     },
+     {
+      "area": "Back",
+      "verdict": "about right",
+      "note": "Plenty of pulling; the row simply needs a new approach."
+     },
+     {
+      "area": "Shoulders",
+      "verdict": "about right",
+      "note": "18 sets, up from 10, and the lateral raise climbing."
+     },
+     {
+      "area": "Arms",
+      "verdict": "neglected",
+      "note": "No curls at all this month, and the dips come last when the arms are spent."
+     }
+    ],
+    "stalls": [
+     {
+      "lift": "Seated Row (Machine)",
+      "cause": "Six sessions at 130 lb with the reps wandering between 8 and 9. The rest between sets has been about a minute: too short for the heaviest pull of the day.",
+      "remedy": "Rest a full two minutes, and stay at 130 lb until all three sets reach 10. If nothing moves in two weeks, spend a fortnight at 120 lb for 3 × 10."
+     },
+     {
+      "lift": "Triceps Dip (Assisted)",
+      "cause": "60 lb of help since the first week, done last in the workout when the arms have nothing left.",
+      "remedy": "Do them before the curls rather than after, and reach 10 reps before asking for less help. Then 55 lb."
+     }
+    ],
+    "trainer_settings": [
+     {
+      "setting": "Workout duration",
+      "suggestion": "60 minutes",
+      "why": "Most September workouts ran 55 to 62 minutes against a 45-minute setting, so Trainer has been dropping the last exercise."
+     },
+     {
+      "setting": "Focus muscle group",
+      "suggestion": "Arms",
+      "why": "Biceps had no direct work all month. A month's focus will bring the curls back without crowding the legs."
+     }
+    ],
+    "focus": [
+     "Keep to three workouts a week; it is working.",
+     "Break the seated row: two minutes' rest, then 3 × 10 at 130 lb.",
+     "Give the arms their due: curls back in, dips earlier."
+    ],
+    "ps": "The household staff have taken to calling the leg press the master's machine. I have not discouraged them."
+   }
+  ]
+ },
+ "accounts_on_request": {
+  "id": "",
+  "request_id": "",
+  "period": "the last 30 days",
+  "period_start": "2026-09-27",
+  "period_end": "2026-10-26",
+  "written": "",
+  "written_et": "",
+  "model": "claude-opus-5-5",
+  "status": "written",
+  "title": "Your Grace",
+  "numbers": {
+   "workouts": 10,
+   "workouts_before": 11,
+   "working_sets": 141,
+   "volume_lb": 64210,
+   "records": 2,
+   "climbing": 4,
+   "stalled": 2,
+   "slipping": 1,
+   "sets_by_group": [
+    {
+     "group": "quadriceps",
+     "sets": 28,
+     "sets_before": 30
+    },
+    {
+     "group": "chest",
+     "sets": 24,
+     "sets_before": 28
+    },
+    {
+     "group": "lats",
+     "sets": 24,
+     "sets_before": 26
+    },
+    {
+     "group": "upper_back",
+     "sets": 22,
+     "sets_before": 22
+    },
+    {
+     "group": "triceps",
+     "sets": 12,
+     "sets_before": 14
+    },
+    {
+     "group": "shoulders",
+     "sets": 9,
+     "sets_before": 18
+    },
+    {
+     "group": "abdominals",
+     "sets": 6,
+     "sets_before": 8
+    },
+    {
+     "group": "hamstrings",
+     "sets": 6,
+     "sets_before": 6
+    },
+    {
+     "group": "biceps",
+     "sets": 3,
+     "sets_before": 0
+    }
+   ],
+   "lifts": [
+    {
+     "lift": "Leg Press (Machine)",
+     "status": "climbing",
+     "start": "290 lb x 10",
+     "end": "320 lb x 9"
+    },
+    {
+     "lift": "Chest Press (Machine)",
+     "status": "climbing",
+     "start": "120 lb x 9",
+     "end": "130 lb x 10"
+    },
+    {
+     "lift": "Pull Up (Assisted)",
+     "status": "climbing",
+     "start": "80 lb x 6",
+     "end": "70 lb x 8"
+    },
+    {
+     "lift": "Push Up",
+     "status": "climbing",
+     "start": "17 reps",
+     "end": "20 reps"
+    },
+    {
+     "lift": "Seated Row (Machine)",
+     "status": "stalled",
+     "start": "130 lb x 9",
+     "end": "130 lb x 8"
+    },
+    {
+     "lift": "Triceps Dip (Assisted)",
+     "status": "stalled",
+     "start": "60 lb x 9",
+     "end": "60 lb x 8"
+    },
+    {
+     "lift": "Lateral Raise (Dumbbell)",
+     "status": "slipping",
+     "start": "20 lb x 11",
+     "end": "15 lb x 10"
+    },
+    {
+     "lift": "Bicep Curl (Machine)",
+     "status": "new",
+     "start": "50 lb x 12",
+     "end": "50 lb x 12"
+    }
+   ]
+  },
+  "headline": "A month of quiet progress, Your Grace, with one shoulder asking to be heard.",
+  "summary": "Ten workouts in the last thirty days, one fewer than the thirty before, but heavier ones: the leg press reached 320 lb and the pull-up is down to 70 lb of help, both new bests. The chest press made 130 lb for ten.\n\nThe shoulders are the matter of the month. Their sets halved, the lateral raise slipped from 20 lb to 15 lb, and your note of Oct 23 says the shoulder grumbled. I would rather we listened now than later.\n\n(This is the sample household: in your own ledger the accounts are drawn from your real workouts.)",
+  "highlights": [
+   "Leg press: 320 lb for 9, a new best.",
+   "Pull-up: 70 lb of help, the least yet.",
+   "Curls are back: the first in six weeks."
+  ],
+  "balance": [
+   {
+    "area": "Legs",
+    "verdict": "well fed",
+    "note": "Still the pride of the household."
+   },
+   {
+    "area": "Back",
+    "verdict": "about right",
+    "note": "Steady, row excepted."
+   },
+   {
+    "area": "Shoulders",
+    "verdict": "neglected",
+    "note": "Nine sets, down from eighteen, and a grumble on record."
+   },
+   {
+    "area": "Arms",
+    "verdict": "about right",
+    "note": "The new curl is a start."
+   }
+  ],
+  "stalls": [
+   {
+    "lift": "Lateral Raise (Dumbbell)",
+    "cause": "The weight went to 20 lb before the reps were secure, and the shoulder has complained since.",
+    "remedy": "15 lb, slowly, until all three sets reach 12 without complaint. Then 17.5 lb."
+   },
+   {
+    "lift": "Seated Row (Machine)",
+    "cause": "Seven sessions at 130 lb; the rest between sets is still about a minute.",
+    "remedy": "Two weeks at 120 lb for 3 × 10 with two minutes' rest, then back to 130 lb."
+   }
+  ],
+  "trainer_settings": [
+   {
+    "setting": "Injuries",
+    "suggestion": "Shoulder",
+    "why": "Trainer then chooses kinder pressing and raising for a while, without dropping the shoulders altogether."
+   },
+   {
+    "setting": "Rest timer",
+    "suggestion": "2 minutes",
+    "why": "The heavy machines want longer than the 60 seconds Trainer allows now."
+   }
+  ],
+  "focus": [
+   "Mind the shoulder: lighter raises, done slowly.",
+   "Break the row with a fortnight at 120 lb.",
+   "Keep the leg press at 320 lb until all sets reach 10."
+  ],
+  "ps": "I have moved the dumbbells you favour to the lower rack. It seemed the least I could do."
  }
 }

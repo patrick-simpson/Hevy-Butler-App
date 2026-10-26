@@ -13,7 +13,9 @@ import { renderBook } from "./views/book.js";
 import { renderRules } from "./views/rules.js";
 import { renderDiary } from "./views/diary.js";
 import { renderAsk } from "./views/ask.js";
+import { renderAccounts } from "./views/accounts.js";
 import { bindAsk, loadConversation, askState } from "./ask.js";
+import { bindAccounts, loadAccounts, accState } from "./accounts.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -24,6 +26,7 @@ const ROUTES = {
   book: renderBook,
   rules: renderRules,
   diary: renderDiary,
+  accounts: renderAccounts,
 };
 
 const ctx = {
@@ -58,6 +61,7 @@ const ctx = {
     const cached = store.cachedData();
     if (!client.demo && cached.data) { ctx.data = cached.data; ctx.dataAt = cached.at; }
     bindAsk(ctx);
+    bindAccounts(ctx);
     updateChrome();
     refresh({ quiet: !!ctx.data });
   },
@@ -69,6 +73,7 @@ const ctx = {
     ctx.proposalsCount = null;
     ctx.round = null;
     bindAsk(ctx);
+    bindAccounts(ctx);
     updateChrome();
     ctx.navigate("welcome");
     render();
@@ -166,6 +171,12 @@ async function refresh({ quiet = false } = {}) {
   // On the Ask page, pulling down also fetches the butler's letters.
   if (currentRoute() === "ask" && !askState.loading && Date.now() - askState.triedAt > 5000) {
     loadConversation(ctx, { quiet: true });
+  }
+  // On the Accounts page (and now and then on the Ledger), the statements too.
+  const route = currentRoute();
+  if (!accState.loading && ((route === "accounts" && Date.now() - accState.triedAt > 5000) ||
+      (route === "ledger" && Date.now() - accState.triedAt > 5 * 60 * 1000))) {
+    loadAccounts(ctx, { quiet: true });
   }
   refreshing = (async () => {
     let ok = false;
@@ -434,7 +445,10 @@ function render() {
     if (again && main.contains(again)) again.focus({ preventScroll: true });
   }
   for (const tab of document.querySelectorAll(".tab")) {
-    const on = tab.dataset.route === document.body.dataset.route;
+    // A page reached from another (the accounts, from the Ledger) keeps that tab lit.
+    const route = document.body.dataset.route;
+    const parent = { accounts: "ledger" }[route] || route;
+    const on = tab.dataset.route === parent;
     tab.classList.toggle("is-active", on);
     if (on) tab.setAttribute("aria-current", "page"); else tab.removeAttribute("aria-current");
   }
@@ -604,11 +618,13 @@ function boot() {
     ctx.client = liveClient(store.token, store.repo);
     if (cached.data) { ctx.data = cached.data; ctx.dataAt = cached.at; }
     bindAsk(ctx);
+    bindAccounts(ctx);
     render();
     refresh({ quiet: true });
   } else if (mode === "demo") {
     ctx.client = demoClient();
     bindAsk(ctx);
+    bindAccounts(ctx);
     render();
     refresh({ quiet: true });
   } else {
