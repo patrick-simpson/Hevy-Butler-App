@@ -1,5 +1,8 @@
 // The Butler's Ledger: app shell, routing, refresh, Sync and the top hat.
 
+// This file's edition; js/boot.js checks it matches the page and the styles.
+window.LEDGER_BUILD = "ledger-v6";
+
 import { h, mount, clear, buzz, prefersReducedMotion } from "./dom.js";
 import { store } from "./store.js";
 import { liveClient, explain, explainStart, mergeSettings } from "./github.js";

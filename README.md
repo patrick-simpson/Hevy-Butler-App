@@ -75,9 +75,12 @@ To disconnect, go to **House rules** and press **Forget my key**.
 
 Plain static files with no build step: `index.html`, `styles.css`, `js/`
 (ES modules), `sw.js` (offline support), `manifest.webmanifest` and `icons/`.
-**With every release, bump `VERSION` in `sw.js`** (for example `ledger-v5` to
-`ledger-v6`), and list any new file in its `SHELL`. That is what makes phones that already installed the app fetch
-the whole new release together.
+**With every release, run `python3 tools/bump_version.py`**, and list any new
+file in `sw.js`'s `SHELL`. The script bumps the edition (for example `ledger-v6`
+to `ledger-v7`) in `sw.js`, `index.html`, `js/app.js` and `styles.css` together.
+The offline copy fetches every file fresh when there is a signal, and `js/boot.js`
+checks on opening that the page, styles and code are the same edition; if a phone
+ever mixes them, it repairs itself with one automatic reload.
 
 Sync starts the private repository's `butler.yml` workflow through GitHub's
 API (`dry_run` set to `"false"`; a rehearsal sends `"true"`), watches that run

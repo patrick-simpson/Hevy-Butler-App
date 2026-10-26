@@ -29,6 +29,7 @@
    ========================================================================== */
 
 :root {
+  --ledger-build: "ledger-v6";   /* must match sw.js VERSION; see tools/bump_version.py */
   --paper: #F4EEE1;
   --paper-light: #FBF8F1;     /* memos, inputs: a fresher sheet */
   --paper-deep: #E9DFC9;      /* section tabs not in use */
@@ -1641,9 +1642,12 @@ body[data-route="welcome"] .slip { bottom: calc(env(safe-area-inset-bottom) + 1r
   font-variant-caps: all-small-caps;
   letter-spacing: 0.07em;
   font-weight: 600;
-  font-size: 1.0625rem;
+  /* Never wider than a fifth of the screen allows, even with Android's largest text. */
+  font-size: min(1.0625rem, 4.6vw);
   line-height: 1.4rem;
   white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
 }
 .tab.is-active {
   background: var(--paper);
@@ -1684,7 +1688,7 @@ body[data-route="welcome"] .slip { bottom: calc(env(safe-area-inset-bottom) + 1r
   .display { font-size: 2rem; line-height: calc(var(--lh) * 1.375); }
   .welcome .display { font-size: 2.25rem; }
   .mast-name { font-size: 1.25rem; }
-  .tab-name { font-size: 1rem; letter-spacing: 0.04em; }
+  .tab-name { font-size: min(1rem, 4.3vw); letter-spacing: 0.04em; }
   .memo { padding-left: 0.75rem; padding-right: 0.75rem; }
 }
 
