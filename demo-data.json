@@ -1,0 +1,1173 @@
+{
+ "_note": "Invented sample data for the app's demo mode. Not anyone's real workouts.",
+ "app_data": {
+  "version": 1,
+  "updated": "2026-10-26T00:07:00+00:00",
+  "updated_et": "Sun Oct 25, 8:07 PM ET",
+  "title": "Your Grace",
+  "on_duty_since": "2026-09-03T01:07:00+00:00",
+  "last_workout": {
+   "id": "sample-workout-24",
+   "title": "Full Body 2",
+   "start_time": "2026-10-25T23:12:00Z",
+   "when_et": "Sun Oct 25, 7:12 PM ET",
+   "routine_id": null
+  },
+  "health": {
+   "hevy": true,
+   "claude": true,
+   "ntfy": false,
+   "email": false,
+   "claude_ok_last_time": true,
+   "last_error": null,
+   "last_error_et": null
+  },
+  "settings": {
+   "model": "claude-sonnet-5-5",
+   "small_weight_lb": 10,
+   "small_weight_pct": 10,
+   "small_reps": 2,
+   "small_rest_sec": 60,
+   "max_changes": 4,
+   "stall_sessions": 3,
+   "history_sessions": 8,
+   "tunable_routines": [
+    "a1c3e5f7-0000-4d2b-9c11-5ample000001"
+   ],
+   "on_holiday": false
+  },
+  "settings_schema": [
+   {
+    "key": "on_holiday",
+    "label": "The butler is on holiday",
+    "kind": "toggle",
+    "default": false,
+    "help": "Switch on when you are travelling or resting on purpose. The butler stops reviewing workouts and will not send any \"where have you been\" notes. Approving or declining his proposals still works."
+   },
+   {
+    "key": "small_weight_lb",
+    "label": "Automatic weight change, up to",
+    "unit": "lb",
+    "kind": "number",
+    "min": 0,
+    "max": 20,
+    "step": 2.5,
+    "default": 10,
+    "help": "On routines you let him tune, weight changes this size or smaller happen on their own. Bigger ones wait for your approval. Set to 0 to approve every weight change yourself."
+   },
+   {
+    "key": "small_weight_pct",
+    "label": "...and no more than",
+    "unit": "% of the weight",
+    "kind": "number",
+    "min": 0,
+    "max": 10,
+    "step": 1,
+    "default": 10,
+    "help": "A second limit for automatic weight changes, as a share of the current weight. Whichever limit is stricter wins. He never makes a lift more than 10% harder at once, whatever you set here."
+   },
+   {
+    "key": "small_reps",
+    "label": "Automatic rep change, up to",
+    "unit": "reps",
+    "kind": "number",
+    "min": 0,
+    "max": 5,
+    "step": 1,
+    "default": 2,
+    "help": "Changes to your rep target this size or smaller happen on their own. Bigger ones wait for you."
+   },
+   {
+    "key": "small_rest_sec",
+    "label": "Automatic rest change, up to",
+    "unit": "seconds",
+    "kind": "number",
+    "min": 0,
+    "max": 120,
+    "step": 15,
+    "default": 60,
+    "help": "Changes to the rest timer this size or smaller happen on their own. Bigger ones wait for you."
+   },
+   {
+    "key": "max_changes",
+    "label": "Most changes per workout",
+    "unit": "changes",
+    "kind": "number",
+    "min": 0,
+    "max": 6,
+    "step": 1,
+    "default": 4,
+    "help": "The most routine changes he may suggest after one workout, automatic and proposed together. Advice does not count. Set to 0 and he will only advise."
+   },
+   {
+    "key": "stall_sessions",
+    "label": "A lift has stalled after",
+    "unit": "sessions",
+    "kind": "number",
+    "min": 2,
+    "max": 6,
+    "step": 1,
+    "default": 3,
+    "help": "If a lift has not beaten its earlier best in this many sessions, he calls it stalled and suggests a fix."
+   },
+   {
+    "key": "history_sessions",
+    "label": "Sessions he studies per lift",
+    "unit": "sessions",
+    "kind": "number",
+    "min": 4,
+    "max": 16,
+    "step": 1,
+    "default": 8,
+    "help": "How many past sessions of each lift he reads before giving his view, and how many the app charts. More history means steadier judgement and a slightly higher Claude bill."
+   },
+   {
+    "key": "model",
+    "label": "Claude model",
+    "kind": "choice",
+    "default": "claude-sonnet-5-5",
+    "choices": [
+     {
+      "value": "claude-sonnet-5-5",
+      "label": "Sonnet 5.5 (about 3 cents a workout)"
+     },
+     {
+      "value": "claude-opus-5-5",
+      "label": "Opus 5.5 (about 6 cents a workout)"
+     }
+    ],
+    "help": "The mind behind the butler. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price."
+   }
+  ],
+  "lifts": [
+   {
+    "id": "D0A1B2C3",
+    "title": "Chest Press (Machine)",
+    "unit": "lb est. max",
+    "status": "climbing",
+    "best": 173.3,
+    "lower_is_better": false,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Sep 2",
+      "iso": "2026-09-02T22:12:00Z",
+      "score": 133.3,
+      "top_set": "100 lb x 10",
+      "sets": [
+       "100 lb x 10",
+       "100 lb x 9",
+       "100 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 9",
+      "iso": "2026-09-09T22:31:00Z",
+      "score": 139.3,
+      "top_set": "110 lb x 8",
+      "sets": [
+       "110 lb x 8",
+       "110 lb x 7",
+       "110 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 15",
+      "iso": "2026-09-15T23:44:00Z",
+      "score": 146.7,
+      "top_set": "110 lb x 10",
+      "sets": [
+       "110 lb x 10",
+       "110 lb x 9",
+       "110 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 22",
+      "iso": "2026-09-22T23:15:00Z",
+      "score": 152.0,
+      "top_set": "120 lb x 8",
+      "sets": [
+       "120 lb x 8",
+       "120 lb x 7",
+       "120 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 28",
+      "iso": "2026-09-28T11:03:00Z",
+      "score": 156.0,
+      "top_set": "120 lb x 9",
+      "sets": [
+       "120 lb x 9",
+       "120 lb x 8",
+       "120 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 5",
+      "iso": "2026-10-05T22:55:00Z",
+      "score": 160.0,
+      "top_set": "120 lb x 10",
+      "sets": [
+       "120 lb x 10",
+       "120 lb x 9",
+       "120 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 17",
+      "iso": "2026-10-17T22:11:00Z",
+      "score": 164.7,
+      "top_set": "130 lb x 8",
+      "sets": [
+       "130 lb x 8",
+       "130 lb x 7",
+       "130 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 23",
+      "iso": "2026-10-23T22:02:00Z",
+      "score": 173.3,
+      "top_set": "130 lb x 10",
+      "sets": [
+       "130 lb x 10",
+       "130 lb x 9",
+       "130 lb x 8"
+      ],
+      "notes": "Seat on 4"
+     }
+    ]
+   },
+   {
+    "id": "E1F2A3B4",
+    "title": "Pull Up (Assisted)",
+    "unit": "lb assistance",
+    "status": "climbing",
+    "best": 70.0,
+    "lower_is_better": true,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Sep 4",
+      "iso": "2026-09-04T23:47:00Z",
+      "score": 100.0,
+      "top_set": "100 lb x 6",
+      "sets": [
+       "100 lb x 6",
+       "100 lb x 5",
+       "110 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 11",
+      "iso": "2026-09-12T00:58:00Z",
+      "score": 100.0,
+      "top_set": "100 lb x 8",
+      "sets": [
+       "100 lb x 8",
+       "100 lb x 7",
+       "110 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 18",
+      "iso": "2026-09-18T22:09:00Z",
+      "score": 90.0,
+      "top_set": "90 lb x 6",
+      "sets": [
+       "90 lb x 6",
+       "90 lb x 5",
+       "100 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 24",
+      "iso": "2026-09-24T22:52:00Z",
+      "score": 90.0,
+      "top_set": "90 lb x 8",
+      "sets": [
+       "90 lb x 8",
+       "90 lb x 7",
+       "100 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 1",
+      "iso": "2026-10-01T22:40:00Z",
+      "score": 80.0,
+      "top_set": "80 lb x 6",
+      "sets": [
+       "80 lb x 6",
+       "80 lb x 5",
+       "90 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 13",
+      "iso": "2026-10-13T11:22:00Z",
+      "score": 80.0,
+      "top_set": "80 lb x 7",
+      "sets": [
+       "80 lb x 7",
+       "80 lb x 6",
+       "90 lb x 7"
+      ],
+      "notes": "Seat one notch higher"
+     },
+     {
+      "date": "Oct 19",
+      "iso": "2026-10-20T00:48:00Z",
+      "score": 70.0,
+      "top_set": "70 lb x 6",
+      "sets": [
+       "70 lb x 6",
+       "70 lb x 5",
+       "80 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 70.0,
+      "top_set": "70 lb x 8",
+      "sets": [
+       "70 lb x 8",
+       "70 lb x 7",
+       "80 lb x 8"
+      ],
+      "notes": ""
+     }
+    ]
+   },
+   {
+    "id": "B5C6D7E8",
+    "title": "Leg Press (Machine)",
+    "unit": "lb est. max",
+    "status": "climbing",
+    "best": 416.0,
+    "lower_is_better": false,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Sep 7",
+      "iso": "2026-09-07T11:05:00Z",
+      "score": 360.0,
+      "top_set": "270 lb x 10",
+      "sets": [
+       "270 lb x 10",
+       "270 lb x 9",
+       "270 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 13",
+      "iso": "2026-09-13T11:20:00Z",
+      "score": 373.3,
+      "top_set": "280 lb x 10",
+      "sets": [
+       "280 lb x 10",
+       "280 lb x 9",
+       "280 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 20",
+      "iso": "2026-09-20T11:36:00Z",
+      "score": 367.3,
+      "top_set": "290 lb x 8",
+      "sets": [
+       "290 lb x 8",
+       "290 lb x 7",
+       "290 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 26",
+      "iso": "2026-09-27T00:27:00Z",
+      "score": 386.7,
+      "top_set": "290 lb x 10",
+      "sets": [
+       "290 lb x 10",
+       "290 lb x 9",
+       "290 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 3",
+      "iso": "2026-10-03T23:18:00Z",
+      "score": 380.0,
+      "top_set": "300 lb x 8",
+      "sets": [
+       "300 lb x 8",
+       "300 lb x 7",
+       "300 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 15",
+      "iso": "2026-10-15T23:33:00Z",
+      "score": 390.0,
+      "top_set": "300 lb x 9",
+      "sets": [
+       "300 lb x 9",
+       "300 lb x 8",
+       "300 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 21",
+      "iso": "2026-10-21T11:26:00Z",
+      "score": 400.0,
+      "top_set": "300 lb x 10",
+      "sets": [
+       "300 lb x 10",
+       "300 lb x 9",
+       "300 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 416.0,
+      "top_set": "320 lb x 9",
+      "sets": [
+       "320 lb x 9",
+       "320 lb x 8",
+       "320 lb x 7"
+      ],
+      "notes": ""
+     }
+    ]
+   },
+   {
+    "id": "F9A0B1C2",
+    "title": "Seated Row (Machine)",
+    "unit": "lb est. max",
+    "status": "stalled",
+    "best": 169.0,
+    "lower_is_better": false,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Sep 4",
+      "iso": "2026-09-04T23:47:00Z",
+      "score": 160.0,
+      "top_set": "120 lb x 10",
+      "sets": [
+       "120 lb x 10",
+       "120 lb x 9",
+       "120 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 11",
+      "iso": "2026-09-12T00:58:00Z",
+      "score": 164.7,
+      "top_set": "130 lb x 8",
+      "sets": [
+       "130 lb x 8",
+       "130 lb x 7",
+       "130 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 18",
+      "iso": "2026-09-18T22:09:00Z",
+      "score": 169.0,
+      "top_set": "130 lb x 9",
+      "sets": [
+       "130 lb x 9",
+       "130 lb x 8",
+       "130 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 24",
+      "iso": "2026-09-24T22:52:00Z",
+      "score": 164.7,
+      "top_set": "130 lb x 8",
+      "sets": [
+       "130 lb x 8",
+       "130 lb x 7",
+       "130 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 1",
+      "iso": "2026-10-01T22:40:00Z",
+      "score": 169.0,
+      "top_set": "130 lb x 9",
+      "sets": [
+       "130 lb x 9",
+       "130 lb x 8",
+       "130 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 13",
+      "iso": "2026-10-13T11:22:00Z",
+      "score": 164.7,
+      "top_set": "130 lb x 8",
+      "sets": [
+       "130 lb x 8",
+       "130 lb x 7",
+       "130 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 19",
+      "iso": "2026-10-20T00:48:00Z",
+      "score": 169.0,
+      "top_set": "130 lb x 9",
+      "sets": [
+       "130 lb x 9",
+       "130 lb x 8",
+       "130 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 164.7,
+      "top_set": "130 lb x 8",
+      "sets": [
+       "130 lb x 8",
+       "130 lb x 7",
+       "130 lb x 6"
+      ],
+      "notes": ""
+     }
+    ]
+   },
+   {
+    "id": "A3B4C5D6",
+    "title": "Lateral Raise (Dumbbell)",
+    "unit": "lb est. max",
+    "status": "slipping",
+    "best": 27.3,
+    "lower_is_better": false,
+    "weight_step": 2.5,
+    "equipment": "dumbbell",
+    "sessions": [
+     {
+      "date": "Sep 9",
+      "iso": "2026-09-09T22:31:00Z",
+      "score": 21.0,
+      "top_set": "15 lb x 12",
+      "sets": [
+       "15 lb x 12",
+       "15 lb x 11",
+       "15 lb x 10"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 15",
+      "iso": "2026-09-15T23:44:00Z",
+      "score": 23.3,
+      "top_set": "17.5 lb x 10",
+      "sets": [
+       "17.5 lb x 10",
+       "17.5 lb x 9",
+       "17.5 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 22",
+      "iso": "2026-09-22T23:15:00Z",
+      "score": 26.7,
+      "top_set": "20 lb x 10",
+      "sets": [
+       "20 lb x 10",
+       "20 lb x 9",
+       "20 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 28",
+      "iso": "2026-09-28T11:03:00Z",
+      "score": 27.3,
+      "top_set": "20 lb x 11",
+      "sets": [
+       "20 lb x 11",
+       "20 lb x 10",
+       "20 lb x 9"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 5",
+      "iso": "2026-10-05T22:55:00Z",
+      "score": 26.0,
+      "top_set": "20 lb x 9",
+      "sets": [
+       "20 lb x 9",
+       "20 lb x 8",
+       "20 lb x 7"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 17",
+      "iso": "2026-10-17T22:11:00Z",
+      "score": 23.3,
+      "top_set": "17.5 lb x 10",
+      "sets": [
+       "17.5 lb x 10",
+       "17.5 lb x 9",
+       "17.5 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 23",
+      "iso": "2026-10-23T22:02:00Z",
+      "score": 22.2,
+      "top_set": "17.5 lb x 8",
+      "sets": [
+       "17.5 lb x 8",
+       "17.5 lb x 7",
+       "17.5 lb x 6"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 20.0,
+      "top_set": "15 lb x 10",
+      "sets": [
+       "15 lb x 10",
+       "15 lb x 9",
+       "15 lb x 8"
+      ],
+      "notes": "Left shoulder grumbled"
+     }
+    ]
+   },
+   {
+    "id": "C7D8E9F0",
+    "title": "Push Up",
+    "unit": "reps",
+    "status": "climbing",
+    "best": 20.0,
+    "lower_is_better": false,
+    "weight_step": null,
+    "equipment": "none",
+    "sessions": [
+     {
+      "date": "Sep 2",
+      "iso": "2026-09-02T22:12:00Z",
+      "score": 14.0,
+      "top_set": "14 reps",
+      "sets": [
+       "BW x 14",
+       "BW x 11"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 13",
+      "iso": "2026-09-13T11:20:00Z",
+      "score": 15.0,
+      "top_set": "15 reps",
+      "sets": [
+       "BW x 15",
+       "BW x 12"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 24",
+      "iso": "2026-09-24T22:52:00Z",
+      "score": 15.0,
+      "top_set": "15 reps",
+      "sets": [
+       "BW x 15",
+       "BW x 12"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 5",
+      "iso": "2026-10-05T22:55:00Z",
+      "score": 17.0,
+      "top_set": "17 reps",
+      "sets": [
+       "BW x 17",
+       "BW x 14"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 21",
+      "iso": "2026-10-21T11:26:00Z",
+      "score": 18.0,
+      "top_set": "18 reps",
+      "sets": [
+       "BW x 18",
+       "BW x 15"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 20.0,
+      "top_set": "20 reps",
+      "sets": [
+       "BW x 20",
+       "BW x 17"
+      ],
+      "notes": ""
+     }
+    ]
+   },
+   {
+    "id": "D1E2F3A4",
+    "title": "Triceps Dip (Assisted)",
+    "unit": "lb assistance",
+    "status": "stalled",
+    "best": 60.0,
+    "lower_is_better": true,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Sep 7",
+      "iso": "2026-09-07T11:05:00Z",
+      "score": 60.0,
+      "top_set": "60 lb x 8",
+      "sets": [
+       "60 lb x 8",
+       "60 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Sep 20",
+      "iso": "2026-09-20T11:36:00Z",
+      "score": 60.0,
+      "top_set": "60 lb x 8",
+      "sets": [
+       "60 lb x 8",
+       "60 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 3",
+      "iso": "2026-10-03T23:18:00Z",
+      "score": 60.0,
+      "top_set": "60 lb x 9",
+      "sets": [
+       "60 lb x 9",
+       "60 lb x 9"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 21",
+      "iso": "2026-10-21T11:26:00Z",
+      "score": 60.0,
+      "top_set": "60 lb x 8",
+      "sets": [
+       "60 lb x 8",
+       "60 lb x 8"
+      ],
+      "notes": ""
+     },
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 60.0,
+      "top_set": "60 lb x 8",
+      "sets": [
+       "60 lb x 8",
+       "60 lb x 8"
+      ],
+      "notes": ""
+     }
+    ]
+   },
+   {
+    "id": "E5F6A7B8",
+    "title": "Bicep Curl (Machine)",
+    "unit": "lb est. max",
+    "status": "new",
+    "best": 70.0,
+    "lower_is_better": false,
+    "weight_step": 10,
+    "equipment": "machine",
+    "sessions": [
+     {
+      "date": "Oct 25",
+      "iso": "2026-10-25T23:12:00Z",
+      "score": 70.0,
+      "top_set": "50 lb x 12",
+      "sets": [
+       "50 lb x 12",
+       "50 lb x 11",
+       "50 lb x 10"
+      ],
+      "notes": ""
+     }
+    ]
+   }
+  ],
+  "routines": [
+   {
+    "id": "a1c3e5f7-0000-4d2b-9c11-5ample000001",
+    "title": "Arm Day A",
+    "folder_id": null,
+    "tunable": true,
+    "exercises": [
+     {
+      "id": "E5F6A7B8",
+      "title": "Bicep Curl (Machine)",
+      "working_sets": 3,
+      "weight": "50 lb",
+      "reps": "12",
+      "rest_seconds": 75
+     },
+     {
+      "id": "D1E2F3A4",
+      "title": "Triceps Dip (Assisted)",
+      "working_sets": 3,
+      "weight": "60 lb",
+      "reps": "8",
+      "rest_seconds": 120
+     }
+    ]
+   },
+   {
+    "id": "b2d4f6a8-0000-4e3c-8d22-5ample000002",
+    "title": "Leg Day",
+    "folder_id": null,
+    "tunable": false,
+    "exercises": [
+     {
+      "id": "B5C6D7E8",
+      "title": "Leg Press (Machine)",
+      "working_sets": 4,
+      "weight": "300 lb",
+      "reps": "10",
+      "rest_seconds": 150
+     }
+    ]
+   },
+   {
+    "id": "c3e5a7b9-0000-4f4d-9e33-5ample000003",
+    "title": "Travel Kit",
+    "folder_id": null,
+    "tunable": false,
+    "exercises": [
+     {
+      "id": "C7D8E9F0",
+      "title": "Push Up",
+      "working_sets": 3,
+      "weight": "bodyweight",
+      "reps": "15",
+      "rest_seconds": 60
+     },
+     {
+      "id": "A3B4C5D6",
+      "title": "Lateral Raise (Dumbbell)",
+      "working_sets": 3,
+      "weight": "15 lb",
+      "reps": "12",
+      "rest_seconds": null
+     }
+    ]
+   }
+  ],
+  "log": [
+   {
+    "kind": "baseline",
+    "when": "Tue Sep 1, 9:07 PM ET",
+    "when_iso": "2026-09-02T01:07:00+00:00",
+    "workout": "",
+    "title": "Sir",
+    "message": "I have taken up my post, Sir. I have read your last 24 workouts and noted where every lift stands. I shall look in twice a day, at about ten in the morning and ten at night.",
+    "applied": [],
+    "proposed": [],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "note",
+    "when": "Mon Oct 12, 9:07 AM ET",
+    "when_iso": "2026-10-12T13:07:00+00:00",
+    "workout": "",
+    "title": "Sir",
+    "message": "Sir. It has been a week. The leg press has asked after you. I told it you were 'very busy.' I am not certain it believed me.",
+    "applied": [],
+    "proposed": [],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "review",
+    "when": "Thu Oct 15, 8:28 PM ET",
+    "when_iso": "2026-10-16T00:28:00+00:00",
+    "workout": "Full Body 1",
+    "title": "Sir",
+    "message": "A steady session, Sir. The chest press is ready for more; I have written up a fourth set for your consideration.",
+    "applied": [],
+    "proposed": [
+     "Chest Press (Machine): 3 sets -> 4 sets"
+    ],
+    "advice": [
+     "Chest Press (Machine): you made 10 reps on every set at 120 lb. Go to 130 lb next time; Hevy Trainer will do the same once it sees it."
+    ],
+    "ignored": []
+   },
+   {
+    "kind": "decline",
+    "when": "Thu Oct 15, 10:43 PM ET",
+    "when_iso": "2026-10-16T02:43:00+00:00",
+    "workout": "🎩 A proposal regarding Full Body 1",
+    "title": "Sir",
+    "message": "As you wish, Sir. The proposal has been quietly shown out.",
+    "applied": [],
+    "proposed": [
+     "Chest Press (Machine): 3 sets -> 4 sets"
+    ],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "fallback",
+    "when": "Mon Oct 19, 9:40 PM ET",
+    "when_iso": "2026-10-20T01:40:00+00:00",
+    "workout": "Full Body 1",
+    "title": "Sir",
+    "message": "Claude was not answering the bell this morning, Sir, so I kept to the plain figures. Leg press 300 lb x 10: well done. Nothing has been changed.",
+    "applied": [],
+    "proposed": [],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "review",
+    "when": "Wed Oct 21, 8:24 AM ET",
+    "when_iso": "2026-10-21T12:24:00+00:00",
+    "workout": "Arm Day A",
+    "title": "Sir",
+    "message": "Your arms were in fine voice, Sir. I have added a little rest before the dips, and written up a bolder idea for your approval.",
+    "applied": [
+     "Triceps Dip (Assisted): rest 90 s -> 120 s"
+    ],
+    "proposed": [
+     "Triceps Dip (Assisted): assistance 60 lb -> 50 lb"
+    ],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "review",
+    "when": "Fri Oct 23, 6:52 PM ET",
+    "when_iso": "2026-10-23T22:52:00+00:00",
+    "workout": "Full Body 2",
+    "title": "Sir",
+    "message": "A tidy session, Sir. The pull-up machine is having to help you less and less; I find that very satisfying.",
+    "applied": [],
+    "proposed": [
+     "Bicep Curl (Machine): rest 90 s -> 75 s"
+    ],
+    "advice": [
+     "Pull Up (Assisted): try 60 lb of assistance next time for your first set."
+    ],
+    "ignored": []
+   },
+   {
+    "kind": "approval",
+    "when": "Fri Oct 23, 8:16 PM ET",
+    "when_iso": "2026-10-24T00:16:00+00:00",
+    "workout": "🎩 A proposal regarding Full Body 2",
+    "title": "Sir",
+    "message": "Very good, Sir. It is done: Bicep Curl (Machine): rest 90 s -> 75 s.",
+    "applied": [
+     "Bicep Curl (Machine): rest 90 s -> 75 s"
+    ],
+    "proposed": [],
+    "advice": [],
+    "ignored": []
+   },
+   {
+    "kind": "review",
+    "when": "Sun Oct 25, 8:07 PM ET",
+    "when_iso": "2026-10-26T00:07:00+00:00",
+    "workout": "Full Body 2",
+    "title": "Your Grace",
+    "message": "320 on the leg press, Your Grace. I rang every bell in the house. The lateral raises are flagging, and the row has settled in for the winter; notes on both below.",
+    "applied": [],
+    "proposed": [
+     "Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb"
+    ],
+    "advice": [
+     "Lateral Raise (Dumbbell): your note mentions the shoulder. Hold at 15 lb and stop if it grumbles again.",
+     "Seated Row (Machine): stuck at 130 lb for six sessions. In Hevy Trainer, set Program variety to 'varied' for a few weeks."
+    ],
+    "ignored": [
+     "Leg Press (Machine): 320 lb -> 360 lb (more than 10% at once)"
+    ]
+   },
+   {
+    "kind": "rehearsal",
+    "when": "Sun Oct 25, 8:47 PM ET",
+    "when_iso": "2026-10-26T00:47:00+00:00",
+    "workout": "Full Body 2",
+    "title": "Your Grace",
+    "message": "A rehearsal, Your Grace. I went through this morning's workout as if for real, changed nothing in Hevy, and sent the notes marked as a rehearsal.",
+    "applied": [],
+    "proposed": [],
+    "advice": [],
+    "ignored": []
+   }
+  ],
+  "advice": [
+   {
+    "when_et": "Thu Oct 15, 8:28 PM ET",
+    "workout": "Full Body 1",
+    "lift": "Chest Press (Machine)",
+    "text": "You made 10 reps on every set at 120 lb. Go to 130 lb next time; Hevy Trainer will do the same once it sees it."
+   },
+   {
+    "when_et": "Fri Oct 23, 6:52 PM ET",
+    "workout": "Full Body 2",
+    "lift": "Pull Up (Assisted)",
+    "text": "Try 60 lb of assistance for your first set next time. Less help is the whole idea."
+   },
+   {
+    "when_et": "Sun Oct 25, 8:07 PM ET",
+    "workout": "Full Body 2",
+    "lift": "Seated Row (Machine)",
+    "text": "Stuck at 130 lb for six sessions. In Hevy Trainer, set Program variety to 'varied' for a few weeks, so it rotates in a different row."
+   },
+   {
+    "when_et": "Sun Oct 25, 8:07 PM ET",
+    "workout": "Full Body 2",
+    "lift": "Lateral Raise (Dumbbell)",
+    "text": "Your note mentions the shoulder. Hold at 15 lb. If it grumbles again, add it under Injuries in Hevy Trainer so it swaps in something kinder."
+   },
+   {
+    "when_et": "Sun Oct 25, 8:07 PM ET",
+    "workout": "Full Body 2",
+    "lift": "Leg Press (Machine)",
+    "text": "A new best: 320 lb x 9. Stay at 320 until you make 10 on every set; Trainer will raise it for you after that."
+   }
+  ],
+  "diary": [
+   {
+    "day": 1,
+    "when_et": "Tue Sep 1, 9:07 PM ET",
+    "text": "Day 1. Took up my post. Sir prefers to train after supper. I have moved the kettle accordingly and said nothing."
+   },
+   {
+    "day": 9,
+    "when_et": "Wed Sep 9, 7:31 PM ET",
+    "text": "Day 9. Sir logged a workout containing no exercises whatsoever. I have filed it under 'aspirations'."
+   },
+   {
+    "day": 24,
+    "when_et": "Thu Sep 24, 7:52 PM ET",
+    "text": "Day 24. The assisted pull-up machine is helping Sir ten pounds less than a month ago. I told no one. I did, however, tell the kettle."
+   },
+   {
+    "day": 41,
+    "when_et": "Mon Oct 12, 9:07 AM ET",
+    "text": "Day 41. Seven days without a workout. I polished the dumbbells. Then I polished them again. They are, at this point, mirrors."
+   },
+   {
+    "day": 45,
+    "when_et": "Thu Oct 15, 10:43 PM ET",
+    "text": "Day 45. My proposal of a fourth set of chest press was declined. I have taken it with perfect composure and only one biscuit."
+   },
+   {
+    "day": 55,
+    "when_et": "Sun Oct 25, 8:07 PM ET",
+    "text": "Day 55. Three hundred and twenty pounds on the leg press. I rang every bell in the house, including the one in the attic that nobody has rung since 1911."
+   }
+  ],
+  "rehearsal": {
+   "when_et": "Sun Oct 25, 8:47 PM ET",
+   "workout": "Full Body 2",
+   "text": "🎭 Rehearsal — nothing was changed.\n\nYour Grace, 320 on the leg press. I rang every bell in the house.\n\nWould have proposed:\n- Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb\n\nAdvice:\n- Lateral Raise (Dumbbell): hold at 15 lb; mind the shoulder.\n- Leg Press (Machine): stay at 320 lb until all sets reach 10.\n\nYour obedient servant,\nThe Deadlift Butler"
+  },
+  "stats": {
+   "reviews": 19,
+   "records": 4,
+   "workout_count": 24
+  }
+ },
+ "issues": [
+  {
+   "number": 14,
+   "title": "🎩 A proposal regarding Full Body 2",
+   "state": "open",
+   "created_at": "2026-10-26T00:07:00Z",
+   "html_url": "#/awaiting",
+   "user": {
+    "login": "github-actions[bot]"
+   },
+   "labels": [
+    {
+     "name": "butler-proposal"
+    }
+   ],
+   "body": "Your Grace,\n\nThe seated row has settled in at 130 lb for six sessions. A short step back usually breaks the jam, and as it is a bigger change than the house rules let me make alone, it awaits your word.\n\n**I would not presume to make these changes without your word:**\n\n- **Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb**. Stuck at 130 lb for six sessions. A short step back usually breaks the jam.\n\nReply **/approve** to carry on, or **/decline** and I shall say no more of it. (The ledger app has buttons for both.)\n\n<!-- BUTLER-PLAN {\"version\": 1, \"workout\": \"Full Body 2\", \"message\": \"The seated row has settled in at 130 lb for six sessions. A short step back usually breaks the jam, and as it is a bigger change than the house rules let me make alone, it awaits your word.\", \"items\": [{\"desc\": \"Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb\", \"reason\": \"Stuck at 130 lb for six sessions. A short step back usually breaks the jam.\"}], \"changes\": [], \"templates\": {}} -->"
+  },
+  {
+   "number": 12,
+   "title": "🎩 A proposal regarding Arm Day A",
+   "state": "open",
+   "created_at": "2026-10-21T12:24:00Z",
+   "html_url": "#/awaiting",
+   "user": {
+    "login": "github-actions[bot]"
+   },
+   "labels": [
+    {
+     "name": "butler-proposal"
+    }
+   ],
+   "body": "Sir,\n\nThe dips have been clean at 60 lb of help for five sessions running. I should like to take some of that help away.\n\n**I would not presume to make these changes without your word:**\n\n- **Triceps Dip (Assisted): assistance 60 lb -> 50 lb**. Eight clean reps at 60 lb on every set, five sessions running. Less help is the next step, and it is a 17% change, so it needs your word.\n\nReply **/approve** to carry on, or **/decline** and I shall say no more of it. (The ledger app has buttons for both.)\n\n<!-- BUTLER-PLAN {\"version\": 1, \"workout\": \"Arm Day A\", \"items\": [{\"desc\": \"Triceps Dip (Assisted): assistance 60 lb -\\u003e 50 lb\", \"reason\": \"Eight clean reps at 60 lb on every set, five sessions running. Less help is the next step, and it is a 17% change, so it needs your word.\"}], \"changes\": [], \"templates\": {}} -->"
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://api.github.com; manifest-src 'self'; worker-src 'self'; base-uri 'self'; form-action 'none'; object-src 'none'">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#F4EEE1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="The Butler's Ledger: the phone companion to The Deadlift Butler, who keeps an eye on your Hevy workouts.">
+  <title>The Butler's Ledger</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="icon" href="icons/icon-192.png" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body data-route="welcome">
+  <a class="skip" href="#main">Skip to the page</a>
+
+  <div class="top">
+    <header class="masthead">
+      <button id="hat" class="hat" type="button" aria-label="Ring for the butler">
+        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+          <path class="hat-crown" d="M19.6 11.2 Q32 8.2 44.4 11.2 L42.6 43.4 Q32 45.4 21.4 43.4 Z"/>
+          <path class="hat-band" d="M21.1 37.2 Q32 39.4 42.9 37.2 L42.6 43.4 Q32 45.4 21.4 43.4 Z"/>
+          <path class="hat-brim" d="M6.5 45.6 Q8.6 41.6 20.6 43 Q32 45.6 43.4 43 Q55.4 41.6 57.5 45.6 Q55 50.6 32 51.2 Q9 50.6 6.5 45.6 Z"/>
+          <g class="hat-hatch">
+            <path d="M24.2 14.4 L23.4 35.4"/>
+            <path d="M26.6 13.9 L26.0 35.9"/>
+            <path d="M28.8 13.6 L28.4 36.2"/>
+            <path d="M11.5 46.2 Q20 48.6 32 48.8"/>
+          </g>
+        </svg>
+      </button>
+      <div class="mast-title">
+        <p class="mast-name">The Butler’s Ledger</p>
+        <p class="mast-sub">kept by The Deadlift Butler</p>
+      </div>
+      <button id="sync" class="sync" type="button" aria-label="Sync: have the butler check Hevy now" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M19.2 8.6 A8 8 0 1 0 20 13.4"/><path d="M19.6 3.8 L19.4 8.9 L14.4 8.6"/></svg>
+        <span class="sync-word" aria-hidden="true">Sync</span>
+      </button>
+    </header>
+    <div id="demo-marker" class="demo-marker" hidden>
+      <p><span class="demo-word">Sample household</span> · invented figures</p>
+      <button id="leave-demo" type="button" class="link-btn">Leave</button>
+    </div>
+    <p id="loading" class="loading" role="status" aria-live="polite" hidden></p>
+    <p id="pull" class="pull" aria-hidden="true" hidden></p>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <noscript><p class="page">The butler regrets that this ledger needs JavaScript switched on.</p></noscript>
+  </main>
+
+  <p id="slip" class="slip" role="status" aria-live="polite" hidden></p>
+
+  <nav id="tabs" class="tabs" aria-label="Sections of the ledger" hidden>
+    <a class="tab" data-route="ledger" href="#/ledger"><span class="tab-num" aria-hidden="true">I</span><span class="tab-name">Ledger</span></a>
+    <a class="tab" data-route="awaiting" href="#/awaiting"><span class="tab-num" aria-hidden="true">II</span><span class="tab-name">Awaiting<span id="awaiting-count" class="tab-count num" hidden></span></span></a>
+    <a class="tab" data-route="book" href="#/book"><span class="tab-num" aria-hidden="true">III</span><span class="tab-name">Book</span></a>
+    <a class="tab" data-route="rules" href="#/rules"><span class="tab-num" aria-hidden="true">IV</span><span class="tab-name">Rules</span></a>
+  </nav>
+
+  <dialog id="letter" class="letter-dialog" aria-label="A letter from the butler"></dialog>
+</body>
+</html>

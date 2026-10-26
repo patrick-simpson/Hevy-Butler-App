@@ -1,0 +1,97 @@
+[
+  {
+    "key": "on_holiday",
+    "label": "The butler is on holiday",
+    "kind": "toggle",
+    "default": false,
+    "help": "Switch on when you are travelling or resting on purpose. The butler stops reviewing workouts and will not send any \"where have you been\" notes. Approving or declining his proposals still works."
+  },
+  {
+    "key": "small_weight_lb",
+    "label": "Automatic weight change, up to",
+    "unit": "lb",
+    "kind": "number",
+    "min": 0,
+    "max": 20,
+    "step": 2.5,
+    "default": 10,
+    "help": "On routines you let him tune, weight changes this size or smaller happen on their own. Bigger ones wait for your approval. Set to 0 to approve every weight change yourself."
+  },
+  {
+    "key": "small_weight_pct",
+    "label": "...and no more than",
+    "unit": "% of the weight",
+    "kind": "number",
+    "min": 0,
+    "max": 10,
+    "step": 1,
+    "default": 10,
+    "help": "A second limit for automatic weight changes, as a share of the current weight. Whichever limit is stricter wins. He never makes a lift more than 10% harder at once, whatever you set here."
+  },
+  {
+    "key": "small_reps",
+    "label": "Automatic rep change, up to",
+    "unit": "reps",
+    "kind": "number",
+    "min": 0,
+    "max": 5,
+    "step": 1,
+    "default": 2,
+    "help": "Changes to your rep target this size or smaller happen on their own. Bigger ones wait for you."
+  },
+  {
+    "key": "small_rest_sec",
+    "label": "Automatic rest change, up to",
+    "unit": "seconds",
+    "kind": "number",
+    "min": 0,
+    "max": 120,
+    "step": 15,
+    "default": 60,
+    "help": "Changes to the rest timer this size or smaller happen on their own. Bigger ones wait for you."
+  },
+  {
+    "key": "max_changes",
+    "label": "Most changes per workout",
+    "unit": "changes",
+    "kind": "number",
+    "min": 0,
+    "max": 6,
+    "step": 1,
+    "default": 4,
+    "help": "The most routine changes he may suggest after one workout, automatic and proposed together. Advice does not count. Set to 0 and he will only advise."
+  },
+  {
+    "key": "stall_sessions",
+    "label": "A lift has stalled after",
+    "unit": "sessions",
+    "kind": "number",
+    "min": 2,
+    "max": 6,
+    "step": 1,
+    "default": 3,
+    "help": "If a lift has not beaten its earlier best in this many sessions, he calls it stalled and suggests a fix."
+  },
+  {
+    "key": "history_sessions",
+    "label": "Sessions he studies per lift",
+    "unit": "sessions",
+    "kind": "number",
+    "min": 4,
+    "max": 16,
+    "step": 1,
+    "default": 8,
+    "help": "How many past sessions of each lift he reads before giving his view, and how many the app charts. More history means steadier judgement and a slightly higher Claude bill."
+  },
+  {
+    "key": "model",
+    "label": "Claude model",
+    "kind": "choice",
+    "default": "claude-sonnet-5-5",
+    "choices": [
+      {"value": "claude-sonnet-5-5", "label": "Sonnet 5.5 (about 3 cents a workout)"},
+      {"value": "claude-opus-5-5", "label": "Opus 5.5 (about 6 cents a workout)"}
+    ],
+    "help": "The mind behind the butler. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price."
+  }
+]

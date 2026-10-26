@@ -1,0 +1,19 @@
+{
+  "name": "The Butler's Ledger",
+  "short_name": "Ledger",
+  "description": "The Deadlift Butler's ledger: your lifts, his advice, and proposals awaiting your word.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#F4EEE1",
+  "theme_color": "#F4EEE1",
+  "lang": "en-US",
+  "categories": ["health", "fitness", "lifestyle"],
+  "icons": [
+    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
