@@ -134,9 +134,13 @@
      {
       "value": "claude-opus-5-5",
       "label": "Opus 5.5 (about 6 cents a workout)"
+     },
+     {
+      "value": "claude-haiku-5-5",
+      "label": "Haiku 5.5 (about a quarter of a cent a workout)"
      }
     ],
-    "help": "The mind behind the butler. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price."
+    "help": "The mind behind the butler's reviews. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price. Haiku is the junior footman: very quick and almost free, a touch less shrewd. Your questions to the butler always use Haiku."
    }
   ],
   "lifts": [
@@ -981,7 +985,33 @@
     "applied": [],
     "proposed": [],
     "advice": [],
-    "ignored": []
+    "ignored": [],
+    "report": {
+     "workout_id": "sample-workout-20",
+     "workout": "Full Body 1",
+     "start_time": "2026-10-20T00:48:00+00:00",
+     "when_et": "Mon Oct 19, 8:48 PM ET",
+     "trainer": true,
+     "title": "Sir",
+     "message": "Claude was not answering the bell this morning, Sir, so I kept to the plain figures. Leg press 300 lb x 10: well done. Nothing has been changed.",
+     "numbers": {
+      "duration_min": 47,
+      "exercises": 5,
+      "working_sets": 15,
+      "volume_lb": 10180,
+      "records": 1,
+      "compared_to": null,
+      "volume_change_pct": null
+     },
+     "went_well": [
+      "Leg Press (Machine): 300 lb for 10."
+     ],
+     "targets": [],
+     "advice": [],
+     "ps": "",
+     "model": null,
+     "fallback": true
+    }
    },
    {
     "kind": "review",
@@ -1013,7 +1043,55 @@
     "advice": [
      "Pull Up (Assisted): try 60 lb of assistance next time for your first set."
     ],
-    "ignored": []
+    "ignored": [],
+    "report": {
+     "workout_id": "sample-workout-22",
+     "workout": "Full Body 2",
+     "start_time": "2026-10-23T22:02:00+00:00",
+     "when_et": "Fri Oct 23, 6:02 PM ET",
+     "trainer": true,
+     "title": "Sir",
+     "message": "A tidy session, Sir. The pull-up machine is having to help you less and less; I find that very satisfying.",
+     "numbers": {
+      "duration_min": 51,
+      "exercises": 6,
+      "working_sets": 18,
+      "volume_lb": 11540,
+      "records": 0,
+      "compared_to": {
+       "when_et": "Sat Oct 17, 6:11 PM ET",
+       "duration_min": 49,
+       "working_sets": 17,
+       "volume_lb": 11020
+      },
+      "volume_change_pct": 4.7
+     },
+     "went_well": [
+      "Pull Up (Assisted): 70 lb of help for 6, down from 80 lb.",
+      "Chest Press (Machine): 130 lb for 10 on the first set."
+     ],
+     "targets": [
+      {
+       "lift": "Pull Up (Assisted)",
+       "target": "60 lb help × 6",
+       "why": "Less help is the whole idea."
+      },
+      {
+       "lift": "Chest Press (Machine)",
+       "target": "130 lb × 10",
+       "why": "Every set to 10 before more weight."
+      }
+     ],
+     "advice": [
+      {
+       "lift": "Pull Up (Assisted)",
+       "text": "Try 60 lb of assistance for your first set next time."
+      }
+     ],
+     "ps": "The pull-up machine and I have reached an understanding. It helps you less; I polish it more.",
+     "model": "claude-sonnet-5-5",
+     "fallback": false
+    }
    },
    {
     "kind": "approval",
@@ -1046,7 +1124,74 @@
     ],
     "ignored": [
      "Leg Press (Machine): 320 lb -> 360 lb (more than 10% at once)"
-    ]
+    ],
+    "report": {
+     "workout_id": "sample-workout-24",
+     "workout": "Full Body 2",
+     "start_time": "2026-10-25T23:12:00+00:00",
+     "when_et": "Sun Oct 25, 7:12 PM ET",
+     "trainer": true,
+     "title": "Your Grace",
+     "message": "320 on the leg press, Your Grace. I rang every bell in the house. The lateral raises are flagging, and the row has settled in for the winter; notes on both below.",
+     "numbers": {
+      "duration_min": 54,
+      "exercises": 7,
+      "working_sets": 20,
+      "volume_lb": 12465,
+      "records": 1,
+      "compared_to": {
+       "when_et": "Fri Oct 23, 6:02 PM ET",
+       "duration_min": 51,
+       "working_sets": 18,
+       "volume_lb": 11540
+      },
+      "volume_change_pct": 8.0
+     },
+     "went_well": [
+      "Leg Press (Machine): 320 lb for 9, a new best.",
+      "Pull Up (Assisted): 70 lb of help for 8, down from 100 lb in September.",
+      "Push Up: 20 in a row, your most yet."
+     ],
+     "targets": [
+      {
+       "lift": "Leg Press (Machine)",
+       "target": "320 lb × 10",
+       "why": "Make 10 on every set before adding weight."
+      },
+      {
+       "lift": "Pull Up (Assisted)",
+       "target": "60 lb help × 6",
+       "why": "Less help is the next step."
+      },
+      {
+       "lift": "Lateral Raise (Dumbbell)",
+       "target": "15 lb × 10",
+       "why": "Hold here while the shoulder settles."
+      },
+      {
+       "lift": "Bicep Curl (Machine)",
+       "target": "50 lb × 12",
+       "why": "A first visit: repeat it before adding weight."
+      }
+     ],
+     "advice": [
+      {
+       "lift": "Lateral Raise (Dumbbell)",
+       "text": "Your note mentions the shoulder. Hold at 15 lb and stop if it grumbles again."
+      },
+      {
+       "lift": "Seated Row (Machine)",
+       "text": "Stuck at 130 lb for six sessions. In Hevy Trainer, set Program variety to 'varied' for a few weeks."
+      },
+      {
+       "lift": "Leg Press (Machine)",
+       "text": "Rest a full two minutes between sets. The machine will wait; the record deserves it."
+      }
+     ],
+     "ps": "7:12 PM ET, Your Grace. I have rung every bell in the house, including the one in the attic. The neighbours have been informed.",
+     "model": "claude-sonnet-5-5",
+     "fallback": false
+    }
    },
    {
     "kind": "rehearsal",
@@ -1128,12 +1273,146 @@
   "rehearsal": {
    "when_et": "Sun Oct 25, 8:47 PM ET",
    "workout": "Full Body 2",
-   "text": "🎭 Rehearsal — nothing was changed.\n\nYour Grace, 320 on the leg press. I rang every bell in the house.\n\nWould have proposed:\n- Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb\n\nAdvice:\n- Lateral Raise (Dumbbell): hold at 15 lb; mind the shoulder.\n- Leg Press (Machine): stay at 320 lb until all sets reach 10.\n\nYour obedient servant,\nThe Deadlift Butler"
+   "text": "🎭 Rehearsal — nothing was changed.\n\nYour Grace, 320 on the leg press. I rang every bell in the house.\n\nWould have proposed:\n- Seated Row (Machine): 3 x 10 at 120 lb for two weeks, then back to 130 lb\n\nAdvice:\n- Lateral Raise (Dumbbell): hold at 15 lb; mind the shoulder.\n- Leg Press (Machine): stay at 320 lb until all sets reach 10.\n\nYour obedient servant,\nThe Deadlift Butler",
+   "report": {
+    "workout_id": "sample-workout-24",
+    "workout": "Full Body 2",
+    "start_time": "2026-10-25T23:12:00+00:00",
+    "when_et": "Sun Oct 25, 7:12 PM ET",
+    "trainer": true,
+    "title": "Your Grace",
+    "message": "A rehearsal, Your Grace. 320 on the leg press, Your Grace. I rang every bell in the house. The lateral raises are flagging, and the row has settled in for the winter; notes on both below.",
+    "numbers": {
+     "duration_min": 54,
+     "exercises": 7,
+     "working_sets": 20,
+     "volume_lb": 12465,
+     "records": 1,
+     "compared_to": {
+      "when_et": "Fri Oct 23, 6:02 PM ET",
+      "duration_min": 51,
+      "working_sets": 18,
+      "volume_lb": 11540
+     },
+     "volume_change_pct": 8.0
+    },
+    "went_well": [
+     "Leg Press (Machine): 320 lb for 9, a new best.",
+     "Pull Up (Assisted): 70 lb of help for 8, down from 100 lb in September.",
+     "Push Up: 20 in a row, your most yet."
+    ],
+    "targets": [
+     {
+      "lift": "Leg Press (Machine)",
+      "target": "320 lb × 10",
+      "why": "Make 10 on every set before adding weight."
+     },
+     {
+      "lift": "Pull Up (Assisted)",
+      "target": "60 lb help × 6",
+      "why": "Less help is the next step."
+     },
+     {
+      "lift": "Lateral Raise (Dumbbell)",
+      "target": "15 lb × 10",
+      "why": "Hold here while the shoulder settles."
+     },
+     {
+      "lift": "Bicep Curl (Machine)",
+      "target": "50 lb × 12",
+      "why": "A first visit: repeat it before adding weight."
+     }
+    ],
+    "advice": [
+     {
+      "lift": "Lateral Raise (Dumbbell)",
+      "text": "Your note mentions the shoulder. Hold at 15 lb and stop if it grumbles again."
+     },
+     {
+      "lift": "Seated Row (Machine)",
+      "text": "Stuck at 130 lb for six sessions. In Hevy Trainer, set Program variety to 'varied' for a few weeks."
+     },
+     {
+      "lift": "Leg Press (Machine)",
+      "text": "Rest a full two minutes between sets. The machine will wait; the record deserves it."
+     }
+    ],
+    "ps": "7:12 PM ET, Your Grace. I have rung every bell in the house, including the one in the attic. The neighbours have been informed.",
+    "model": "claude-sonnet-5-5",
+    "fallback": false
+   }
   },
   "stats": {
    "reviews": 19,
    "records": 4,
    "workout_count": 24
+  },
+  "latest_report": {
+   "workout_id": "sample-workout-24",
+   "workout": "Full Body 2",
+   "start_time": "2026-10-25T23:12:00+00:00",
+   "when_et": "Sun Oct 25, 7:12 PM ET",
+   "trainer": true,
+   "title": "Your Grace",
+   "message": "320 on the leg press, Your Grace. I rang every bell in the house. The lateral raises are flagging, and the row has settled in for the winter; notes on both below.",
+   "numbers": {
+    "duration_min": 54,
+    "exercises": 7,
+    "working_sets": 20,
+    "volume_lb": 12465,
+    "records": 1,
+    "compared_to": {
+     "when_et": "Fri Oct 23, 6:02 PM ET",
+     "duration_min": 51,
+     "working_sets": 18,
+     "volume_lb": 11540
+    },
+    "volume_change_pct": 8.0
+   },
+   "went_well": [
+    "Leg Press (Machine): 320 lb for 9, a new best.",
+    "Pull Up (Assisted): 70 lb of help for 8, down from 100 lb in September.",
+    "Push Up: 20 in a row, your most yet."
+   ],
+   "targets": [
+    {
+     "lift": "Leg Press (Machine)",
+     "target": "320 lb × 10",
+     "why": "Make 10 on every set before adding weight."
+    },
+    {
+     "lift": "Pull Up (Assisted)",
+     "target": "60 lb help × 6",
+     "why": "Less help is the next step."
+    },
+    {
+     "lift": "Lateral Raise (Dumbbell)",
+     "target": "15 lb × 10",
+     "why": "Hold here while the shoulder settles."
+    },
+    {
+     "lift": "Bicep Curl (Machine)",
+     "target": "50 lb × 12",
+     "why": "A first visit: repeat it before adding weight."
+    }
+   ],
+   "advice": [
+    {
+     "lift": "Lateral Raise (Dumbbell)",
+     "text": "Your note mentions the shoulder. Hold at 15 lb and stop if it grumbles again."
+    },
+    {
+     "lift": "Seated Row (Machine)",
+     "text": "Stuck at 130 lb for six sessions. In Hevy Trainer, set Program variety to 'varied' for a few weeks."
+    },
+    {
+     "lift": "Leg Press (Machine)",
+     "text": "Rest a full two minutes between sets. The machine will wait; the record deserves it."
+    }
+   ],
+   "ps": "7:12 PM ET, Your Grace. I have rung every bell in the house, including the one in the attic. The neighbours have been informed.",
+   "model": "claude-sonnet-5-5",
+   "fallback": false
   }
  },
  "issues": [
@@ -1169,5 +1448,54 @@
    ],
    "body": "Sir,\n\nThe dips have been clean at 60 lb of help for five sessions running. I should like to take some of that help away.\n\n**I would not presume to make these changes without your word:**\n\n- **Triceps Dip (Assisted): assistance 60 lb -> 50 lb**. Eight clean reps at 60 lb on every set, five sessions running. Less help is the next step, and it is a 17% change, so it needs your word.\n\nReply **/approve** to carry on, or **/decline** and I shall say no more of it. (The ledger app has buttons for both.)\n\n<!-- BUTLER-PLAN {\"version\": 1, \"workout\": \"Arm Day A\", \"items\": [{\"desc\": \"Triceps Dip (Assisted): assistance 60 lb -\\u003e 50 lb\", \"reason\": \"Eight clean reps at 60 lb on every set, five sessions running. Less help is the next step, and it is a 17% change, so it needs your word.\"}], \"changes\": [], \"templates\": {}} -->"
   }
- ]
+ ],
+ "conversation": {
+  "version": 1,
+  "messages": [
+   {
+    "ask_id": "q-sample-01",
+    "conversation": 1,
+    "asked": "2026-10-14T23:02:00+00:00",
+    "asked_et": "Wed Oct 14, 7:02 PM ET",
+    "question": "What does 'stalled' mean in the ledger?",
+    "answer": "Sir, a lift is stalled when your best effort has not moved for three sessions in a row.\n\nIt is not a reproach. It usually means the body has caught up with the work and wants a change: a little more rest, a short step back, or a different rep range.",
+    "answered_et": "Wed Oct 14, 7:03 PM ET",
+    "model": "claude-haiku-5-5",
+    "status": "answered"
+   },
+   {
+    "ask_id": "q-sample-02",
+    "conversation": 1,
+    "asked": "2026-10-14T23:06:00+00:00",
+    "asked_et": "Wed Oct 14, 7:06 PM ET",
+    "question": "And slipping?",
+    "answer": "Slipping, Sir, means your recent best is lower than it was. Your lateral raise is the one to watch: 20 lb for 11 a month ago, 15 lb for 10 now.\n\nWith your note about the shoulder, holding steady is the right call.",
+    "answered_et": "Wed Oct 14, 7:07 PM ET",
+    "model": "claude-haiku-5-5",
+    "status": "answered"
+   },
+   {
+    "ask_id": "q-sample-03",
+    "conversation": 2,
+    "asked": "2026-10-24T22:40:00+00:00",
+    "asked_et": "Sat Oct 24, 6:40 PM ET",
+    "question": "Is my pull-up getting better? The numbers go down.",
+    "answer": "Very much so, Sir. On the assisted pull-up the weight is help from the machine, so a smaller number means you are lifting more of yourself.\n\nYou began in September with 100 lb of help. On your last visit it was 70 lb for 8. That is thirty pounds of you that the machine no longer carries.",
+    "answered_et": "Sat Oct 24, 6:41 PM ET",
+    "model": "claude-haiku-5-5",
+    "status": "answered"
+   },
+   {
+    "ask_id": "q-sample-04",
+    "conversation": 2,
+    "asked": "2026-10-24T22:45:00+00:00",
+    "asked_et": "Sat Oct 24, 6:45 PM ET",
+    "question": "How many workouts this month?",
+    "answer": "Nine so far in October, Sir, against eleven in September. The week of the 5th was the quiet one; since then you have kept to two or three a week.",
+    "answered_et": "Sat Oct 24, 6:46 PM ET",
+    "model": "claude-haiku-5-5",
+    "status": "answered"
+   }
+  ]
+ }
 }

@@ -2,6 +2,7 @@
 
 import { h, arrows } from "../dom.js";
 import { toDate, dayKeyET, longDayET, clockET } from "../time.js";
+import { compactReport, compactPs } from "./report.js";
 
 const KINDS = {
   review: { label: "Review", note: "after a workout" },
@@ -17,7 +18,7 @@ export function renderBook(ctx) {
   const data = ctx.data;
   const page = h("div", { class: "page book" },
     h("header", { class: "page-head" },
-      h("p", { class: "eyebrow" }, "Section III"),
+      h("p", { class: "eyebrow" }, "Section IV"),
       h("h1", { class: "display" }, "The household book"),
       h("p", { class: "lede" }, "Every round the butler has made, newest first. Times are Eastern."),
     ));
@@ -67,13 +68,25 @@ function bookEntry(e, d) {
         h("span", { class: "kind-label" }, k.label),
         workout ? h("span", { class: "kind-note" }, ` · ${workout}`) : k.note ? h("span", { class: "kind-note" }, ` · ${k.note}`) : null),
       e.message ? h("p", { class: "log-message" }, arrows(e.message)) : null,
+      // A review's report in brief: the figures, what went well, next time's targets, the P.S.
+      e.report && typeof e.report === "object"
+        ? compactReport(e.report, { withMessage: !e.message, ps: false })
+        : null,
       list("Done", e.applied, "done"),
       list("Proposed", e.proposed, "proposed"),
       list("Advice", e.advice, "advice"),
       list("Set aside by the house rules", e.ignored, "ignored"),
+      e.report && typeof e.report === "object" && !saysAlready(e.message, e.report.ps) ? compactPs(e.report) : null,
     ),
   );
   return li;
+}
+
+/** The butler's message may already end with the report's P.S.: don't print it twice. */
+function saysAlready(message, ps) {
+  const squash = (t) => String(t || "").replace(/^\s*P\.?\s?S\.?\s*/i, "").replace(/\s+/g, " ").trim().slice(0, 60);
+  const p = squash(ps);
+  return !!p && String(message || "").replace(/\s+/g, " ").includes(p);
 }
 
 function list(label, items, cls) {

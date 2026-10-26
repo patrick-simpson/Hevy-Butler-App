@@ -4,7 +4,8 @@
 import { h, arrows } from "../dom.js";
 import { greeting, daysSinceLastWorkout } from "../eggs.js";
 import { liftChart, chartPoints, statusMark, STATUS_WORDS, fmtNum, figure } from "../charts.js";
-import { toDate, stampET, ago, dayKeyET, shortDayET, yearET } from "../time.js";
+import { toDate, stampET, ago, dayKeyET, shortDayET, yearET, calendarDaysET } from "../time.js";
+import { fullReport, reportNullState, targetText } from "./report.js";
 
 const STATUSES = ["climbing", "stalled", "slipping"];
 const SHOW_FIRST = 8;          // of the "Earlier" group
@@ -47,9 +48,19 @@ export function renderLedger(ctx) {
   }
 
   const model = liftModel(data);
-  page.append(lastWorkout(ctx, data, title, model));
 
-  const latestAdvice = adviceToShow(data.advice);
+  // The butler's report on the latest workout comes first: it is what you
+  // look at between sets. When it covers the last workout, "Last attended"
+  // keeps only the tally (the report already names the workout).
+  const report = data.latest_report && typeof data.latest_report === "object" ? data.latest_report : null;
+  const covers = !!(report && data.last_workout && report.workout_id && report.workout_id === data.last_workout.id);
+  if (report) page.append(fullReport(ctx, report, covers ? marginDays(daysSinceLastWorkout(data)) : reportMargin(report)));
+  else page.append(reportNullState(ctx));
+
+  page.append(lastWorkout(ctx, data, title, model, covers));
+
+  // The report carries its own advice; the older advice list shows only without one.
+  const latestAdvice = report ? [] : adviceToShow(data.advice);
   if (latestAdvice.length) page.append(adviceBlock(latestAdvice, title));
 
   page.append(liftsBlock(ctx, data, model));
@@ -64,6 +75,43 @@ function latestSession(lift) {
 }
 
 /**
+ * The butler's newest "Next time" target for each lift, by the lift's name.
+ * Each report only names targets for the lifts in its own workout, and the
+ * workouts rotate (Full Body 1, 2, 3), so today's lifts usually have their
+ * targets in an older report: this gathers them from the latest report and
+ * the Book's reviews, newest first. Each value also says which workout it
+ * came from.
+ */
+function targetsByLift(data) {
+  const log = Array.isArray(data.log) ? data.log : [];
+  const reports = [data.latest_report, ...log.slice().reverse().map((e) => e && e.report)];
+  const found = new Map();
+  for (const r of reports) {
+    if (!r || typeof r !== "object" || !Array.isArray(r.targets)) continue;
+    for (const t of r.targets) {
+      if (!t || !t.lift || !t.target) continue;
+      const list = found.get(t.lift) || [];
+      list.push({ target: t, workout: r.workout || "", when_et: r.when_et || "", at: toDate(r.start_time) });
+      found.set(t.lift, list);
+    }
+  }
+  return found;
+}
+
+/**
+ * A lift's target, if it still stands: only the newest one counts, and only
+ * when the lift hasn't been done again since (a later workout without a new
+ * target for it means the old one has had its turn).
+ */
+function nextFor(nextTimes, lift, lastDone) {
+  const list = nextTimes.get(lift.title);
+  if (!list || !list.length) return null;
+  const newest = list[0];
+  if (lastDone && newest.at && lastDone.getTime() > newest.at.getTime() + 60 * 1000) return null;
+  return newest;
+}
+
+/**
  * Every lift, newest first, with the group it belongs in:
  * "now" (trained in the last workout), "earlier", or "resting" (not lately).
  * A resting lift's status is shown as "resting", so last winter's lifts don't
@@ -72,14 +120,16 @@ function latestSession(lift) {
 function liftModel(data, now = new Date()) {
   const lastStart = toDate(data.last_workout && data.last_workout.start_time);
   const lastKey = lastStart ? dayKeyET(lastStart) : null;
+  const nextTimes = targetsByLift(data);
   const lifts = (data.lifts || []).map((lift) => {
     const latest = latestSession(lift);
     const at = toDate(latest && latest.iso);
+    const next = nextFor(nextTimes, lift, at);
     const status = STATUS_WORDS[lift.status] && lift.status !== "resting" ? lift.status : "new";
     let group = "earlier";
     if (at && lastKey && dayKeyET(at) === lastKey) group = "now";
     else if (!at || (now - at) / 86400000 > RESTING_DAYS) group = "resting";
-    return { lift, latest, at, status, group, shown: group === "resting" ? "resting" : status };
+    return { lift, latest, at, status, group, shown: group === "resting" ? "resting" : status, next };
   });
   lifts.sort((a, b) => (b.at || 0) - (a.at || 0));
   const counts = { all: lifts.length, climbing: 0, stalled: 0, slipping: 0, new: 0, resting: 0 };
@@ -98,11 +148,27 @@ function marginDays(n) {
     h("span", { class: "margin-note" }, "days"));
 }
 
-function lastWorkout(ctx, data, title, model) {
+/** The margin beside a report that isn't about the very last workout: its days since. */
+function reportMargin(report) {
+  const d = toDate(report.start_time);
+  if (!d) return null;
+  return marginDays(calendarDaysET(d, new Date()));
+}
+
+function lastWorkout(ctx, data, title, model, covered = false) {
   const lw = data.last_workout;
   const st = data.stats || {};
   const block = h("section", { class: "section", "aria-labelledby": "last-h" },
-    h("h2", { id: "last-h", class: "section-label" }, "Last attended"));
+    h("h2", { id: "last-h", class: "section-label" }, covered ? "How the lifts stand" : "Last attended"));
+  if (covered) {
+    if (model.lifts.length) block.append(tally(ctx, model));
+    const extras = [];
+    if (Number.isFinite(Number(st.workout_count)) && st.workout_count) extras.push(`Workout No. ${st.workout_count}`);
+    if (st.reviews) extras.push(`${st.reviews} review${st.reviews === 1 ? "" : "s"} written`);
+    if (st.records) extras.push(`${st.records} record${st.records === 1 ? "" : "s"} rung in`);
+    if (extras.length) block.append(h("p", { class: "marginal tally-extra" }, extras.join(" · ")));
+    return block;
+  }
   if (!lw) {
     block.append(h("p", { class: "lede" }, `No workouts on record yet, ${title}. The ledger awaits its first entry.`));
     return block;
@@ -307,7 +373,10 @@ function liftEntry(ctx, m) {
   h("span", { class: "lift-best num" }, bestShort(lift), h("span", { class: "lift-best-cap" }, bestCaption(lift))),
   h("span", { class: "lift-sub" },
     h("span", { class: `status status-${shown}` }, STATUS_WORDS[shown]),
-    h("span", { class: "num" }, ` · ${sub}`)));
+    h("span", { class: "num" }, ` · ${sub}`),
+    m.next && shown !== "resting"
+      ? h("span", { class: "lift-next" }, "next ", h("b", { class: "num" }, targetText(m.next.target)))
+      : null));
 
   return h("li", { class: ["entry", "lift", `is-${shown}`, open ? "is-open" : ""], id },
     h("div", { class: "margin" }, mark),
@@ -342,6 +411,7 @@ function liftDetail(ctx, m, id, parts, assisted) {
           h("span", { class: "set" }, latest ? parts.set : "—"),
           parts.rpe ? h("span", { class: "rpe" }, `RPE ${parts.rpe}`) : null)),
       h("div", null, h("dt", null, `Best (${bestCaption(lift)})`), h("dd", { class: "num" }, bestText(lift))),
+      m.next ? nextTimeFigure(m.next) : null,
     ),
     latest && latest.notes ? h("p", { class: "marginal" }, `Your note: “${latest.notes}”`) : null,
     charted ? liftChart(lift) : null,
@@ -349,6 +419,18 @@ function liftDetail(ctx, m, id, parts, assisted) {
     toggle ? h("div", { class: "lift-more" }, toggle) : null,
     showSessions && toggle ? sessionTable(lift, sessions, `${id}-s`) : null,
   );
+}
+
+/** The "Next time" line in an opened lift: the target, why, and where it came from. */
+function nextTimeFigure(next) {
+  const day = (next.when_et || "").match(/^[A-Za-z]{3}\s+([A-Za-z]{3}\s+\d{1,2})\b/);
+  const from = [next.workout, day ? day[1] : ""].filter(Boolean).join(", ");
+  return h("div", { class: "figure-next" },
+    h("dt", null, "Next time"),
+    h("dd", null,
+      h("span", { class: "next-target num" }, targetText(next.target)),
+      next.target.why ? h("span", { class: "next-why" }, arrows(String(next.target.why))) : null,
+      from ? h("span", { class: "figure-next-from" }, `from ${from}`) : null));
 }
 
 function dateCell(session) {

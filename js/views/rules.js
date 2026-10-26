@@ -6,6 +6,7 @@ import { store } from "../store.js";
 import { explain } from "../github.js";
 import { toDate, ago, clockET } from "../time.js";
 import { fmtNum } from "../charts.js";
+import { compactReport } from "./report.js";
 
 let bundledSchema = null;
 let bundledLoading = false;
@@ -116,7 +117,7 @@ export function renderRules(ctx) {
 
   const page = h("div", { class: "page rules" },
     h("header", { class: "page-head" },
-      h("p", { class: "eyebrow" }, "Section IV"),
+      h("p", { class: "eyebrow" }, "Section V"),
       h("h1", { class: "display" }, "House rules"),
       h("p", { class: "lede" }, "How much the butler may do on his own, and how he goes about it. He reads these at the start of every round."),
     ));
@@ -142,11 +143,13 @@ export function renderRules(ctx) {
 
   // ---- rehearsal
   const reh = ctx.data && ctx.data.rehearsal;
-  if (reh && reh.text) {
+  if (reh && (reh.text || reh.report)) {
+    // With a report, the rehearsal reads like the Ledger's report, in brief.
+    const report = reh.report && typeof reh.report === "object" ? reh.report : null;
     page.append(h("section", { class: "section", "aria-labelledby": "reh-h" },
       h("h2", { id: "reh-h", class: "section-label" }, "The last rehearsal"),
       h("p", { class: "meta" }, [reh.when_et, reh.workout ? `on ${reh.workout}` : ""].filter(Boolean).join(" · ")),
-      rehearsalText(reh.text)));
+      report ? h("div", { class: "rehearsal-text" }, compactReport(report, { withMessage: true })) : rehearsalText(reh.text)));
   }
 
   // ---- your key
@@ -286,7 +289,12 @@ function fieldRow(ctx, field) {
         const cid = `${id}-${i}`;
         const input = h("input", { type: "radio", id: cid, name: id, value: String(c.value), checked: String(c.value) === String(value) });
         input.addEventListener("change", () => setDraft(ctx, field.key, c.value));
-        return h("label", { for: cid, class: "choice-opt" }, input, h("span", null, c.label || String(c.value)));
+        // "Haiku 5.5 (about a quarter of a cent a workout)": the name, with the price set beneath it.
+        const label = String(c.label || c.value);
+        const m = label.match(/^(.*?)\s*\((.+)\)\s*$/);
+        return h("label", { for: cid, class: "choice-opt" }, input,
+          m ? h("span", { class: "choice-text" }, h("span", { class: "choice-name" }, m[1]), h("span", { class: "choice-note" }, m[2]))
+            : h("span", null, label));
       })),
       help);
   }

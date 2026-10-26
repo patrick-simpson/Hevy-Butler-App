@@ -63,7 +63,7 @@ export function safeHref(value) {
 
 /** "160 lb -> 165 lb" reads better as "160 lb → 165 lb". Text in, text out. */
 export function arrows(text) {
-  return String(text ?? "").replace(/\s->\s/g, " → ");
+  return String(text ?? "").replace(/\s-{1,2}>\s/g, " → ");
 }
 
 export function clear(el) {

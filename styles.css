@@ -471,6 +471,8 @@ main { display: block; outline: none; }
 .lift-name { font-weight: 600; font-size: 1.125rem; line-height: 1.45rem; font-variant-numeric: lining-nums; }
 .lift-sub { grid-column: 1; color: var(--ink-3); font-size: 0.9375rem; line-height: 1.3rem; }
 .lift-sub .num { white-space: nowrap; }
+.lift-next { display: block; color: var(--ink-2); }
+.lift-next b { color: var(--red); font-weight: 600; }
 .lift-best {
   grid-column: 2; grid-row: 1 / span 2;
   display: flex; flex-direction: column; align-items: flex-end;
@@ -508,6 +510,11 @@ main { display: block; outline: none; }
 }
 .figures dd { margin: 0; font-size: 1.1875rem; line-height: var(--lh); }
 .figures .set { white-space: nowrap; }
+.figure-next { grid-column: 1 / -1; margin-top: calc(var(--lh) * 0.25); }
+.figure-next dd { display: flex; flex-direction: column; align-items: flex-start; }
+.figure-next .next-target { text-align: left; }
+.figure-next .next-why { font-size: 0.9375rem; line-height: 1.3rem; }
+.figure-next-from { font-size: 0.9375rem; line-height: 1.3rem; color: var(--ink-3); }
 .figures .rpe {
   display: block;
   font-size: 0.9375rem; line-height: 1.1rem; color: var(--ink-3);
@@ -570,6 +577,203 @@ main { display: block; outline: none; }
 .sessions td:first-child { text-align: left; }
 .cell-note { display: block; font-style: italic; color: var(--ink-3); }
 .set-one { white-space: nowrap; }
+
+/* ------------------------------------------- the after-workout report -- */
+
+/* The latest report heads the Ledger. It is read between sets, half awake,
+   so the targets for next time are the largest figures on the page. */
+.report .report-head { margin-top: 0; }
+.report-kind { margin-top: -0.2rem; font-style: italic; }
+.report-message {
+  margin-top: calc(var(--lh) * 0.5);
+  font-size: 1.1875rem;
+  line-height: 1.8rem;
+  overflow-wrap: anywhere;
+}
+.report-fallback {
+  margin-top: calc(var(--lh) * 0.5);
+  padding-left: 0.75rem;
+  border-left: 1px dashed var(--ink-3);
+  font-size: 1rem; line-height: 1.5rem; color: var(--ink-2); font-style: italic;
+}
+.report-fallback-word {
+  font-style: normal; font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; color: var(--ink-3);
+}
+.report.is-fallback .report-figures { border-top-style: dashed; }
+
+/* The figures: ruled ledger lines, label left, figure right. */
+.report-figures {
+  margin-top: calc(var(--lh) * 0.5);
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+.report-figure {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 0.75rem;
+  padding: 0.3rem 0;
+}
+.report-figure + .report-figure { border-top: 1px solid var(--rule); }
+.report-figure dt {
+  font-variant-caps: all-small-caps; letter-spacing: 0.06em; font-size: 1rem; color: var(--ink-2);
+  white-space: nowrap;
+}
+.report-figure dd {
+  margin: 0;
+  display: flex; flex-direction: column; align-items: flex-end;
+  text-align: right;
+}
+.report-value { font-size: 1.1875rem; line-height: 1.6rem; font-weight: 600; }
+.report-change { font-size: 0.9375rem; line-height: 1.2rem; color: var(--ink-3); font-style: italic; }
+.report-figure.is-up .report-change { color: var(--green); font-style: normal; font-weight: 600; }
+.report-figure.is-record .report-value { color: var(--red); }
+.report-figure.is-none .report-value { font-weight: 400; color: var(--ink-3); font-style: italic; font-size: 1rem; }
+
+.report-part { margin-top: calc(var(--lh) * 0.75); }
+.report-label {
+  font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; font-size: 1.0625rem;
+  color: var(--ink);
+  padding-bottom: 0.15rem;
+  border-bottom: 1px solid var(--ink);
+}
+
+/* Next time: lift on the left, target large on the right, the why beneath. */
+.next-list { counter-reset: none; }
+.next {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.45rem 0 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+.next-lift { font-weight: 600; font-size: 1.125rem; line-height: 1.45rem; font-variant-numeric: lining-nums; overflow-wrap: anywhere; }
+.next-target {
+  font-size: 1.5rem; line-height: 1.8rem; font-weight: 600;
+  color: var(--red);
+  white-space: nowrap;
+  text-align: right;
+}
+.next-why {
+  grid-column: 1 / -1;
+  font-style: italic; color: var(--ink-2); font-size: 1rem; line-height: 1.4rem;
+}
+
+.report-well-list li {
+  position: relative;
+  padding: 0.3rem 0 0.3rem 1.4rem;
+  line-height: 1.5rem;
+  overflow-wrap: anywhere;
+}
+.report-well-list li::before {
+  content: "✓"; position: absolute; left: 0.1rem; top: 0.3rem;
+  color: var(--green); font-weight: 600;
+}
+.report-advice .advice-list { margin-top: 0; }
+.report-advice .advice-list li:first-child { margin-top: calc(var(--lh) * 0.35); }
+.report-more { margin-top: 0.15rem; }
+
+.report-ps {
+  margin-top: calc(var(--lh) * 0.75);
+  padding-top: calc(var(--lh) * 0.35);
+  border-top: 1px solid var(--rule);
+  font-style: italic; color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.report-ps-mark { font-style: normal; font-variant-caps: all-small-caps; letter-spacing: 0.06em; font-weight: 600; color: var(--ink); }
+.report-ps.is-compact { margin-top: calc(var(--lh) * 0.25); padding-top: 0; border-top: 0; font-size: 1rem; line-height: 1.5rem; }
+
+.report.is-empty .lede { margin-top: 0; }
+
+/* The report in brief (the Book, the last rehearsal). */
+.report-compact { margin-top: 0.15rem; }
+.report-line { margin-top: calc(var(--lh) * 0.25); font-size: 0.9375rem; line-height: 1.35rem; color: var(--ink-2); }
+.log-list-next b { font-weight: 600; white-space: nowrap; }
+.log-list-next .next-lift { font-size: inherit; line-height: inherit; font-weight: 400; }
+.log-list.log-list-next li::before { content: "→"; color: var(--red); }
+.rehearsal-text .report-compact > .log-message { margin-top: 0; }
+
+/* ----------------------------------------------- a word with the butler -- */
+
+.ask-list { margin-top: calc(var(--lh) * 0.25); }
+.ask-day + .ask-exchange, .ask-exchange + .ask-exchange { margin-top: calc(var(--lh) * 0.75); }
+.ask-day { margin-top: calc(var(--lh) * 0.75); }
+.ask-day:first-child { margin-top: 0; }
+.ask-day-head {
+  font-family: var(--font-display); font-weight: 400;
+  font-size: 1.25rem; line-height: calc(var(--lh) * 1.1);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: calc(var(--lh) * 0.35);
+}
+.ask-exchange > .margin { display: flex; flex-direction: column; align-items: flex-end; }
+.ask-exchange .time { font-size: 1rem; line-height: 1.5rem; color: var(--ink-2); }
+.ask-exchange .ampm { font-variant-caps: all-small-caps; letter-spacing: 0.06em; font-size: 0.9375rem; line-height: 1rem; color: var(--ink-3); }
+
+/* His question: a short note in the margin of the book. */
+.ask-q { padding: 0.1rem 0 0 0; }
+.ask-q-label, .ask-letter-head {
+  font-variant-caps: all-small-caps; letter-spacing: 0.08em; font-weight: 600; font-size: 0.9375rem; line-height: 1.3rem;
+  color: var(--ink-3);
+}
+.ask-q-text {
+  font-style: italic; color: var(--ink-2);
+  white-space: pre-line; overflow-wrap: anywhere;
+}
+
+/* The butler's reply: a letter on a fresher sheet, with a fine inner rule. */
+.ask-letter {
+  position: relative;
+  margin-top: calc(var(--lh) * 0.4);
+  padding: 0.65rem 0.9rem 0.8rem;
+  background: var(--paper-light);
+  border: 1px solid var(--paper-edge);
+  border-top: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.ask-letter-head { display: flex; justify-content: space-between; gap: 0.5rem; color: var(--ink-2); }
+.ask-letter-when { font-weight: 400; color: var(--ink-3); white-space: nowrap; }
+.ask-letter-body { margin-top: 0.2rem; }
+.ask-letter-body p { white-space: pre-line; overflow-wrap: anywhere; }
+.ask-letter-body p + p { margin-top: calc(var(--lh) * 0.5); }
+.ask-letter.is-failed { border-top: 2px solid var(--ochre); background: transparent; border-style: dashed; border-top-style: solid; }
+.ask-letter.is-failed .ask-letter-body { font-style: italic; color: var(--ink-2); }
+.ask-letter.is-pending { background: transparent; border: 1px dashed var(--ink-3); border-top: 2px solid var(--ink-3); }
+.ask-wait { font-style: italic; color: var(--ink); min-height: calc(var(--lh) * 2); }
+.ask-wait-meta { margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.3rem; color: var(--ink-3); }
+.ask-noanswer { margin-top: 0.25rem; font-style: italic; }
+.ask-empty { margin-top: 0; }
+.ask-note { margin-left: calc(var(--margin) + var(--gap)); }
+.ask-error { margin-left: calc(var(--margin) + var(--gap)); }
+
+.ask-form { margin-top: 0; }
+.ask-input {
+  min-height: 7.5rem;
+  resize: vertical;
+  line-height: 1.5rem;
+  font-size: 1.0625rem;
+}
+.ask-count { text-align: right; font-size: 0.875rem; line-height: 1.3rem; color: var(--ink-3); margin-top: 0.15rem; }
+.ask-count.is-near { color: var(--red); font-weight: 600; }
+.ask-form .actions { margin-top: 0.25rem; }
+.ask-busy { margin: 0 0 0.4rem; font-style: italic; }
+.ask-ideas { margin-top: calc(var(--lh) * 0.5); }
+.ask-ideas li { line-height: 1.4rem; }
+.ask-ideas .link-btn { text-align: left; font-style: italic; min-height: 2.75rem; line-height: 1.4rem; }
+
+/* Earlier conversations, folded like letters in a drawer. */
+.ask-fold { border-top: 1px solid var(--rule); }
+.ask-fold summary {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 0.75rem;
+  min-height: 2.75rem; padding: 0.5rem 0;
+  cursor: pointer; list-style: none;
+}
+.ask-fold summary::-webkit-details-marker { display: none; }
+.ask-fold-name { font-weight: 600; color: var(--red); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; font-variant-numeric: lining-nums; }
+.ask-fold-name::before { content: "▸ "; text-decoration: none; display: inline-block; width: 1rem; }
+.ask-fold[open] .ask-fold-name::before { content: "▾ "; }
+.ask-fold-meta { font-size: 0.9375rem; color: var(--ink-3); }
+.ask-fold-first { font-style: italic; color: var(--ink-3); font-size: 0.9375rem; line-height: 1.35rem; }
+.ask-fold .ask-list { padding-bottom: calc(var(--lh) * 0.5); }
+.ask-exchange.is-compact .ask-letter-body { font-size: 1rem; line-height: 1.5rem; }
+.ask .ask-fine { margin-left: calc(var(--margin) + var(--gap)); }
 
 /* ------------------------------------------------------------- buttons -- */
 
@@ -848,6 +1052,9 @@ fieldset.rule { margin: 0; border-left: 0; border-right: 0; border-bottom: 0; pa
   line-height: 1.4rem;
 }
 .choice-opt input { width: 1.3rem; height: 1.3rem; accent-color: var(--red); margin: 0; flex: none; }
+.choice-text { display: flex; flex-direction: column; padding: 0.25rem 0; }
+.choice-name { font-weight: 600; }
+.choice-note { font-size: 0.9375rem; line-height: 1.3rem; color: var(--ink-3); font-style: italic; }
 
 .toggle-rule .rule-label { margin-bottom: 0.25rem; }
 .switch {
@@ -1130,7 +1337,7 @@ body[data-route="welcome"] .slip { bottom: calc(env(safe-area-inset-bottom) + 1r
   left: 0; right: 0; bottom: 0;
   z-index: 25;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
   background: var(--paper-deep);
   border-top: 1px solid var(--ink);
@@ -1166,11 +1373,13 @@ body[data-route="welcome"] .slip { bottom: calc(env(safe-area-inset-bottom) + 1r
   border-top: 3px solid var(--red);
 }
 .tab.is-active .tab-num { color: var(--red); }
+/* The number awaiting your word sits beside the numeral, so the label always fits. */
 .tab-count {
   display: inline-block;
-  margin-left: 0.2rem;
+  margin-left: 0.3rem;
   color: var(--red);
-  font-size: inherit;
+  font-family: var(--font-text);
+  font-size: 0.9375rem;
   font-weight: 600;
   vertical-align: baseline;
 }

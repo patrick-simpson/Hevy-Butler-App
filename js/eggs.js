@@ -100,6 +100,30 @@ export function loadingLine(title, last) {
   return { index: i, text: LOADING[i].replaceAll("{t}", title) };
 }
 
+// ------------------------------------------- waiting on an answer (Ask) --
+
+const WAITING = [
+  "Consulting the archives, {t}…",
+  "One moment, {t}. I am fetching the relevant volume from the library.",
+  "Considering the question, {t}, with all the gravity it deserves.",
+  "Bear with me, {t}. I am cross-referencing the leg press with the household accounts.",
+  "A moment, {t}. I am reading back through every workout since the beginning.",
+  "Presently, {t}. I am choosing my words, and then polishing them.",
+  "One moment, {t}. The reference books are rather heavy at this hour.",
+  "Just so, {t}. I am checking the figures twice, as is the custom of the house.",
+  "Patience, {t}. A considered answer takes a moment longer than a hasty one.",
+  "I am drafting a reply, {t}. The first draft was too familiar; I have begun again.",
+  "A moment more, {t}. I have sent down to the cellar for your older workouts.",
+  "Nearly there, {t}. I am blotting the ink.",
+  "Forgive the pause, {t}. I am making quite sure the advice is sound before I commit it to paper.",
+];
+
+export function waitingLine(title, last) {
+  let i = Math.floor(Math.random() * WAITING.length);
+  if (i === last) i = (i + 1) % WAITING.length;
+  return { index: i, text: WAITING[i].replaceAll("{t}", title) };
+}
+
 // --------------------------------------------------- ring for the butler --
 
 const RINGS = [

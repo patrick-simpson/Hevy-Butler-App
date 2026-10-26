@@ -10,6 +10,8 @@ const AREA_PERMISSION = {
   appdata: "Contents",
   issues: "Issues",
   actions: "Actions",
+  ask: "Actions",
+  conversation: "Contents",
   repo: "Metadata",
 };
 
@@ -29,6 +31,9 @@ export function explain(err, repo) {
   }
   const perm = AREA_PERMISSION[err.area] || "Contents";
   const msg = err.githubMessage.toLowerCase();
+  if (err.status === -1 && err.area === "conversation") {
+    return "The butler's letter book (state/conversation.json) is there but I can't read it (it isn't valid JSON). His next answer should tidy it up.";
+  }
   if (err.status === -1) {
     return "The butler's ledger file is there but I can't read it (it isn't valid JSON). The next round should tidy it up.";
   }
@@ -61,6 +66,13 @@ export function explain(err, repo) {
   return `GitHub said no (error ${err.status}). Try again in a minute.`;
 }
 
+/** GitHub's 422 "No ref found for: ..." - the branch named doesn't exist (renamed, say). */
+function isRefError(err) {
+  return err instanceof GitHubError && err.status === 422 && err.githubMessage.toLowerCase().includes("no ref");
+}
+
+const NO_REF = "GitHub couldn't find the butler's branch (it may have just been renamed). Please try again in a moment.";
+
 /**
  * Why Sync (or a rehearsal) couldn't start the butler, in plain English. The
  * usual cause is a key made without the "Actions" permission, or with it set
@@ -74,9 +86,35 @@ export function explainStart(err, repo) {
       return "Your GitHub key needs one more permission to start him. On GitHub, edit the key " +
         "(Settings → Developer settings → Fine-grained tokens) and set \"Actions\" to \"Read and write\".";
     }
+    if (isRefError(err)) return NO_REF;
     if (err.status === 422) {
       return "GitHub wouldn't start the butler. His workflow may be switched off: on GitHub, open the Actions tab, " +
         "choose \"Butler on duty\" and press \"Enable workflow\" if it offers one.";
+    }
+  }
+  return explain(err, repo);
+}
+
+/**
+ * Why a question couldn't be sent to the butler (the ask.yml workflow), in
+ * plain English.
+ */
+export function explainAsk(err, repo) {
+  if (err instanceof GitHubError && err.area === "ask") {
+    const msg = err.githubMessage.toLowerCase();
+    const rate = msg.includes("rate limit");
+    if (err.status === 404) {
+      return "The butler's ask workflow isn't on GitHub yet (.github/workflows/ask.yml in the butler's repository). " +
+        "Once it is there, ask again. If it is there already, the key may be missing the \"Actions\" permission.";
+    }
+    if (err.status === 403 && !rate) {
+      return "Your GitHub key needs one more permission to send a question. On GitHub, edit the key " +
+        "(Settings → Developer settings → Fine-grained tokens) and set \"Actions\" to \"Read and write\".";
+    }
+    if (isRefError(err)) return NO_REF;
+    if (err.status === 422) {
+      return "GitHub wouldn't pass the question on. The workflow may be switched off: on GitHub, open the Actions tab, " +
+        "choose \"A word with the butler\" and press \"Enable workflow\" if it offers one.";
     }
   }
   return explain(err, repo);
@@ -226,12 +264,32 @@ export function liveClient(token, repo) {
       return info.default_branch || "main";
     },
 
-    async dispatch(dryRun, branch) {
-      const ref = branch || (await this.defaultBranch());
-      return call("POST", `${R}/actions/workflows/butler.yml/dispatches`, {
-        area: "actions",
-        body: { ref, inputs: { dry_run: dryRun ? "true" : "false" } },
-      });
+    /**
+     * Starts one of the butler's workflows on his repository's default branch.
+     * The branch name is looked up fresh every time (one small call), never
+     * remembered, so renaming the branch on GitHub can't break Sync, a
+     * rehearsal or a question. Should GitHub still answer "No ref found"
+     * (the name changed in the very same moment), it looks again and tries
+     * once more. Resolves to the branch name it used.
+     */
+    async startWorkflow(file, area, inputs) {
+      let ref = await this.defaultBranch();
+      const path = `${R}/actions/workflows/${file}/dispatches`;
+      try {
+        await call("POST", path, { area, body: { ref, inputs } });
+      } catch (err) {
+        if (!isRefError(err)) throw err;
+        const fresh = await this.defaultBranch();
+        if (fresh === ref) throw err;
+        ref = fresh;
+        await call("POST", path, { area, body: { ref, inputs } });
+      }
+      return ref;
+    },
+
+    /** Starts a round (or a rehearsal, when dryRun). Resolves to the branch used. */
+    dispatch(dryRun) {
+      return this.startWorkflow("butler.yml", "actions", { dry_run: dryRun ? "true" : "false" });
     },
 
     async latestRun() {
@@ -247,6 +305,51 @@ export function liveClient(token, repo) {
 
     /** One round, by its id. */
     run(id) { return call("GET", `${R}/actions/runs/${id}`, { area: "actions" }); },
+
+    // --- A word with the butler (the ask.yml workflow) --------------------
+
+    /**
+     * Sends one question: GitHub starts ask.yml with the question, the app's
+     * own id for it (so the run can be found again) and whether it starts a
+     * fresh conversation. Every input is a string, as GitHub requires.
+     */
+    askDispatch(question, askId, fresh) {
+      return this.startWorkflow("ask.yml", "ask", { question, ask_id: askId, fresh: fresh ? "true" : "false" });
+    },
+
+    /** The ten most recent question runs, newest first. */
+    async askRuns() {
+      const res = await call("GET", `${R}/actions/workflows/ask.yml/runs?per_page=10`, { area: "ask" });
+      return (res && Array.isArray(res.workflow_runs)) ? res.workflow_runs : [];
+    },
+
+    /** One question run, by its id. */
+    askRun(id) { return call("GET", `${R}/actions/runs/${id}`, { area: "ask" }); },
+
+    /** Where to watch the question runs on GitHub. */
+    askRunsPage() { return `https://github.com/${repo}/actions/workflows/ask.yml`; },
+
+    /**
+     * state/conversation.json: every question and answer, oldest first.
+     * Returns {version, messages: []}; an empty book when the file doesn't exist yet.
+     */
+    async conversation() {
+      let raw;
+      try {
+        raw = await call("GET", `${R}/contents/state/conversation.json`, {
+          area: "conversation", accept: "application/vnd.github.raw+json",
+        });
+      } catch (err) {
+        if (err instanceof GitHubError && err.status === 404) return { version: 1, messages: [] };
+        throw err;
+      }
+      try {
+        const json = JSON.parse(raw);
+        return { version: 1, ...json, messages: Array.isArray(json && json.messages) ? json.messages : [] };
+      } catch (_) {
+        throw new GitHubError(-1, "conversation", "unreadable");
+      }
+    },
 
     /** Where to watch the butler's rounds on GitHub. */
     runsPage() { return `https://github.com/${repo}/actions/workflows/butler.yml`; },

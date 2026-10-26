@@ -12,12 +12,15 @@ import { renderAwaiting } from "./views/awaiting.js";
 import { renderBook } from "./views/book.js";
 import { renderRules } from "./views/rules.js";
 import { renderDiary } from "./views/diary.js";
+import { renderAsk } from "./views/ask.js";
+import { bindAsk, loadConversation, askState } from "./ask.js";
 
 const $ = (id) => document.getElementById(id);
 
 const ROUTES = {
   ledger: renderLedger,
   awaiting: renderAwaiting,
+  ask: renderAsk,
   book: renderBook,
   rules: renderRules,
   diary: renderDiary,
@@ -54,6 +57,7 @@ const ctx = {
     ctx.proposalsCount = null;
     const cached = store.cachedData();
     if (!client.demo && cached.data) { ctx.data = cached.data; ctx.dataAt = cached.at; }
+    bindAsk(ctx);
     updateChrome();
     refresh({ quiet: !!ctx.data });
   },
@@ -64,6 +68,7 @@ const ctx = {
     ctx.data = null;
     ctx.proposalsCount = null;
     ctx.round = null;
+    bindAsk(ctx);
     updateChrome();
     ctx.navigate("welcome");
     render();
@@ -158,6 +163,10 @@ let refreshing = null;
 async function refresh({ quiet = false } = {}) {
   if (!ctx.client) return false;
   if (refreshing) return refreshing;
+  // On the Ask page, pulling down also fetches the butler's letters.
+  if (currentRoute() === "ask" && !askState.loading && Date.now() - askState.triedAt > 5000) {
+    loadConversation(ctx, { quiet: true });
+  }
   refreshing = (async () => {
     let ok = false;
     try {
@@ -224,7 +233,9 @@ async function startRound(kind = "sync") {
   let seen;
   try {
     seen = new Set((await client.recentRuns()).map((r) => r.id));
-    await client.dispatch(rehearse, store.branch);
+    // (The branch is looked up fresh each time; the name is kept only for show.)
+    const ref = await client.dispatch(rehearse);
+    if (!client.demo && typeof ref === "string" && ref) store.branch = ref;
   } catch (err) {
     finish();
     if (!stillMine()) return;
@@ -592,10 +603,12 @@ function boot() {
     const cached = store.cachedData();
     ctx.client = liveClient(store.token, store.repo);
     if (cached.data) { ctx.data = cached.data; ctx.dataAt = cached.at; }
+    bindAsk(ctx);
     render();
     refresh({ quiet: true });
   } else if (mode === "demo") {
     ctx.client = demoClient();
+    bindAsk(ctx);
     render();
     refresh({ quiet: true });
   } else {

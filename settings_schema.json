@@ -89,9 +89,10 @@
     "kind": "choice",
     "default": "claude-sonnet-5-5",
     "choices": [
-      {"value": "claude-sonnet-5-5", "label": "Sonnet 5.5 (about 3 cents a workout)"},
-      {"value": "claude-opus-5-5", "label": "Opus 5.5 (about 6 cents a workout)"}
+      {"value": "claude-sonnet-5-5", "label": "Sonnet 5.5 (about 4 cents a workout)"},
+      {"value": "claude-opus-5-5", "label": "Opus 5.5 (about 8 cents a workout)"},
+      {"value": "claude-haiku-5-5", "label": "Haiku 5.5 (about a quarter of a cent a workout)"}
     ],
-    "help": "The mind behind the butler. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price."
+    "help": "The mind behind the butler's reviews. Sonnet is quick, sharp and thrifty. Opus is the senior consultant: a little wiser on tricky plateaus, at about twice the price. Haiku is the junior footman: very quick and almost free, a touch less shrewd. Your questions to the butler always use Haiku."
   }
 ]

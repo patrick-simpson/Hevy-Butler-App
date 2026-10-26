@@ -11,6 +11,10 @@ const KEYS = {
   pending: "ledger.pending",      // proposals we've answered and are waiting on
   loadingLine: "ledger.lastLine",
   saved: "ledger.savedSettings",  // settings saved here, until the butler's next round
+  ask: "ledger.ask",              // the question sent from here that awaits its answer
+  askFresh: "ledger.askFresh",    // "Start afresh" pressed: the next question begins a new conversation
+  convo: "ledger.conversation",   // last good conversation.json
+  waitLine: "ledger.lastWaitLine",
 };
 
 export const DEFAULT_REPO = "patrick-simpson/Hevy-Butler";
@@ -48,7 +52,8 @@ export const store = {
 
   /** "Forget my key": wipes the key and everything cached from the private repo. */
   forget() {
-    for (const k of [KEYS.token, KEYS.repo, KEYS.mode, KEYS.data, KEYS.dataAt, KEYS.branch, KEYS.pending, KEYS.saved]) set(k, null);
+    for (const k of [KEYS.token, KEYS.repo, KEYS.mode, KEYS.data, KEYS.dataAt, KEYS.branch, KEYS.pending, KEYS.saved,
+      KEYS.ask, KEYS.askFresh, KEYS.convo]) set(k, null);
   },
 
   cachedData() {
@@ -73,6 +78,19 @@ export const store = {
     else delete p[number];
     set(KEYS.pending, JSON.stringify(p));
   },
+
+  /** The question awaiting its answer: {ask_id, question, fresh, at, runId} or null. */
+  pendingAsk() { return getJSON(KEYS.ask, null); },
+  setPendingAsk(p) { set(KEYS.ask, p ? JSON.stringify(p) : null); },
+
+  get askFresh() { return get(KEYS.askFresh) === "1"; },
+  set askFresh(on) { set(KEYS.askFresh, on ? "1" : null); },
+
+  cachedConversation() { return getJSON(KEYS.convo, null); },
+  saveConversation(c) { set(KEYS.convo, c ? JSON.stringify(c) : null); },
+
+  get lastWaitLine() { return Number(get(KEYS.waitLine)); },
+  set lastWaitLine(i) { set(KEYS.waitLine, String(i)); },
 
   get lastLine() { return Number(get(KEYS.loadingLine)); },
   set lastLine(i) { set(KEYS.loadingLine, String(i)); },
